@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\Program Kantor\Blackmagic_DeckLink_SDK_11.4\Win\Samples\FilePlayback\</FILEPATH>
+      <FILENAME>PlaybackAudioPacket.cpp</FILENAME>
+      <LINE>31</LINE>
+      <COLUMN>21</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'PlaybackAudioPacket::m_lockedBuffer' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>PlaybackAudioPacket::{ctor}</FUNCTION>
+    <DECORATED>??0PlaybackAudioPacket@@QAE@V?$CComPtr@UIMFSample@@@ATL@@_JW4_BMDAudioSampleType@@I@Z</DECORATED>
+    <FUNCLINE>31</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>PlaybackAudioPacket::m_lockedBuffer</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>

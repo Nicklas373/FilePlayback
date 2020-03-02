@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DEFECTS>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\Program Kantor\Blackmagic_DeckLink_SDK_11.4\Win\Samples\FilePlayback\</FILEPATH>
+      <FILENAME>SourceReader.h</FILENAME>
+      <LINE>50</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'ReadSample::endOfStream' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>ReadSample::{ctor}</FUNCTION>
+    <DECORATED>??0ReadSample@@QAE@XZ</DECORATED>
+    <FUNCLINE>50</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>ReadSample::endOfStream</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+  <DEFECT>
+    <SFA>
+      <FILEPATH>E:\Program Kantor\Blackmagic_DeckLink_SDK_11.4\Win\Samples\FilePlayback\</FILEPATH>
+      <FILENAME>SourceReader.h</FILENAME>
+      <LINE>50</LINE>
+      <COLUMN>0</COLUMN>
+    </SFA>
+    <DEFECTCODE>26495</DEFECTCODE>
+    <DESCRIPTION>Variable 'ReadSample::timestamp' is uninitialized. Always initialize a member variable (type.6).</DESCRIPTION>
+    <FUNCTION>ReadSample::{ctor}</FUNCTION>
+    <DECORATED>??0ReadSample@@QAE@XZ</DECORATED>
+    <FUNCLINE>50</FUNCLINE>
+    <ADDITIONALINFO>
+      <targetSymbol>ReadSample::timestamp</targetSymbol>
+    </ADDITIONALINFO>
+    <PATH></PATH>
+  </DEFECT>
+</DEFECTS>
