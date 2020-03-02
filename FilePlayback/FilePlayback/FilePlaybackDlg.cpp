@@ -34,8 +34,11 @@
 #include "SourceReader.h"
 #include "windows.h"
 
+// This is fixed (static) values to get 16 bit 48Khz output
 static const BMDAudioSampleType	kAudioSampleType	= bmdAudioSampleType16bitInteger;
 static const uint32_t			kAudioChannelCount	= 2;
+
+// Declare Filename as null and slider range value
 CString							currentFilename = NULL;
 static const int				kFilePositionSliderRange = 100;
 
@@ -55,9 +58,9 @@ static CString SecondsToHMS(int64_t seconds)
 CFilePlaybackDlg::CFilePlaybackDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CFilePlaybackDlg::IDD, pParent),
 	m_deckLinkDiscovery(nullptr),
-	m_selectedDevice(nullptr)
-	, m_loopCheck(FALSE)
-	, m_autoplayCheck(FALSE)
+	m_selectedDevice(nullptr),
+	m_loopCheck(FALSE),
+	m_autoplayCheck(FALSE)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	
@@ -734,7 +737,7 @@ LRESULT CFilePlaybackDlg::OnOutputEnabled(WPARAM wParam, LPARAM lParam)
 	CString displayModeName;
 	if (m_selectedDevice->GetDisplayModeName(displayModeName) == S_OK)
 		m_videoFormatEdit.SetWindowText(displayModeName);
-	
+
 	m_playbackState = PlaybackState::OutputEnabled;
 	UpdateInterface();
 

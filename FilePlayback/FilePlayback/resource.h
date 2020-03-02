@@ -23,6 +23,8 @@
 #define IDC_PLAYLIST                    1022
 #define IDC_NEXT_BUTTON                 1025
 #define IDC_AUTOPLAY_CHECK              1026
+#define IDC_EDIT1                       1028
+#define IDC_AUDIO_FORMAT_1              1028
 
 // Next default values for new objects
 // 
@@ -30,7 +32,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        138
 #define _APS_NEXT_COMMAND_VALUE         32782
-#define _APS_NEXT_CONTROL_VALUE         1027
+#define _APS_NEXT_CONTROL_VALUE         1029
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

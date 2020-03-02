@@ -1,5 +1,1 @@
-﻿  cl : Command line warning D9035 : option 'Gm' has been deprecated and will be removed in a future release
-  FilePlaybackDlg.cpp
-E:\Program Kantor\Blackmagic_DeckLink_SDK_11.4\Win\Samples\FilePlayback\FilePlaybackDlg.cpp(698,33): warning C4018:  '>=': signed/unsigned mismatch
-E:\Program Kantor\Blackmagic_DeckLink_SDK_11.4\Win\Samples\FilePlayback\FilePlaybackDlg.cpp(699,31): warning C4018:  '>=': signed/unsigned mismatch
-  FilePlayback.vcxproj -> E:\Program Kantor\Blackmagic_DeckLink_SDK_11.4\Win\Samples\FilePlayback\Win32\Debug\FilePlayback.exe
+﻿  FilePlayback.vcxproj -> C:\Users\MAGANG\Downloads\Compressed\Test\FilePlayback\FilePlayback\Win32\Debug\FilePlayback.exe
