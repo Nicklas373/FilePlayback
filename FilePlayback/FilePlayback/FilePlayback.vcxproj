@@ -233,6 +233,7 @@
     <ClCompile Include="ProfileCallback.cpp" />
     <ClCompile Include="FilePlayback.cpp" />
     <ClCompile Include="FilePlaybackDlg.cpp" />
+	<ClCompile Include="PreviewWindow.cpp" />
     <ClCompile Include="DeckLinkOutputDevice.cpp" />
     <ClCompile Include="DeckLinkDeviceDiscovery.cpp" />
     <ClCompile Include="SampleMemoryAllocator.cpp" />
