@@ -117,6 +117,7 @@ private:
 	CEdit						m_fileNameEdit;
 	CEdit						m_filePositionEdit;
 	CEdit						m_fileDurationEdit;
+	CEdit						m_connectedDevice;
 	CSliderCtrl					m_filePositionSlider;
 
 	CStatic						m_previewBox;
@@ -164,4 +165,6 @@ public:
 	void			LoopCheck();
 	void			AutoplayCheck();
 	afx_msg void OnBnClickedTestAbout();
+	afx_msg void OnEnChangeAudioChannel();
+	afx_msg void OnEnChangeAudioBitDepth();
 };

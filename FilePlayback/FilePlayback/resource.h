@@ -26,8 +26,9 @@
 #define IDC_AUTOPLAY_CHECK              1026
 #define IDC_AUDIO_CHANNEL               1030
 #define IDC_AUDIO_BIT_DEPTH             1031
-#define IDCANCEL                        1032
 #define IDC_TEST_ABOUT                  1033
+#define IDC_EDIT1                       1034
+#define IDC_CONNECTED_DECKLINK          1034
 
 // Next default values for new objects
 // 
@@ -35,7 +36,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        143
 #define _APS_NEXT_COMMAND_VALUE         32782
-#define _APS_NEXT_CONTROL_VALUE         1034
+#define _APS_NEXT_CONTROL_VALUE         1035
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

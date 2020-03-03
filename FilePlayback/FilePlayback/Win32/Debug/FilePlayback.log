@@ -1,3 +1,1 @@
-﻿C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\winuser.rh(1438): warning RC4005: 'IDCANCEL' : redefinition
-  
-  FilePlayback.vcxproj -> C:\Users\MAGANG\Downloads\Compressed\Test\FilePlayback\FilePlayback\Win32\Debug\FilePlayback.exe
+﻿  FilePlayback.vcxproj -> C:\Users\MAGANG\Downloads\Compressed\Test\FilePlayback\FilePlayback\Win32\Debug\FilePlayback.exe
