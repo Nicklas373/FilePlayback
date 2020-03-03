@@ -212,7 +212,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Magang-20200225T022114Z-001\Magang\FilePlayback\FilePlayback\PreviewWindow.cpp" />
     <ClCompile Include="About.cpp" />
+    <ClCompile Include="AudioSampleQueue_fc.cpp" />
     <ClCompile Include="DeckLinkAPI_i.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -223,14 +225,18 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
       </PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="DeckLinkInputDevice.cpp" />
+    <ClCompile Include="FileCapture.cpp" />
+    <ClCompile Include="FileCaptureDlg.cpp" />
     <ClCompile Include="PlaybackAudioPacket.cpp" />
     <ClCompile Include="PlaybackVideoFrame.cpp" />
     <ClCompile Include="ProfileCallback.cpp" />
     <ClCompile Include="FilePlayback.cpp" />
     <ClCompile Include="FilePlaybackDlg.cpp" />
-    <ClCompile Include="PreviewWindow.cpp" />
     <ClCompile Include="DeckLinkOutputDevice.cpp" />
     <ClCompile Include="DeckLinkDeviceDiscovery.cpp" />
+    <ClCompile Include="SampleMemoryAllocator.cpp" />
+    <ClCompile Include="SinkWriter.cpp" />
     <ClCompile Include="SourceReader.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -241,15 +247,22 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="About.h" />
+    <ClInclude Include="AudioSampleQueue_fc.h" />
+    <ClInclude Include="DeckLinkInputDevice.h" />
+    <ClInclude Include="FileCapture.h" />
+    <ClInclude Include="FileCaptureDlg.h" />
     <ClInclude Include="PlaybackAudioPacket.h" />
     <ClInclude Include="PlaybackVideoFrame.h" />
+    <ClInclude Include="PreviewWindow.h" />
     <ClInclude Include="ProfileCallback.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="FilePlayback.h" />
     <ClInclude Include="FilePlaybackDlg.h" />
-    <ClInclude Include="PreviewWindow.h" />
     <ClInclude Include="DeckLinkOutputDevice.h" />
     <ClInclude Include="DeckLinkDeviceDiscovery.h" />
+    <ClInclude Include="SampleMemoryAllocator.h" />
+    <ClInclude Include="SampleQueue_fc.h" />
+    <ClInclude Include="SinkWriter.h" />
     <ClInclude Include="SourceReader.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />

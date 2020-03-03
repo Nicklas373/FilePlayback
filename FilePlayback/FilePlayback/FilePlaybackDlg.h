@@ -79,6 +79,7 @@ public:
 	afx_msg void	OnBnClickedLoopCheck();
 	afx_msg void	OnBnClickedAutoplayCheck();
 	afx_msg void	OnNewDeviceSelected();
+	afx_msg	void	OnBnClickedDecklinkInfo();
 	afx_msg void	OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
 
 	afx_msg LRESULT	OnAddDevice(WPARAM wParam, LPARAM lParam);
@@ -109,6 +110,7 @@ private:
 	CButton						m_autoplayButton;
 	CButton						m_nextButton;
 	CButton						m_aboutButton;
+	CButton						m_fileCapture;
 	CComboBox					m_deviceListCombo;
 	CListBox					m_playlist;
 	CEdit						m_videoFormatEdit;
@@ -167,4 +169,5 @@ public:
 	afx_msg void OnBnClickedTestAbout();
 	afx_msg void OnEnChangeAudioChannel();
 	afx_msg void OnEnChangeAudioBitDepth();
+	afx_msg void OnBnClickedFileCapture();
 };

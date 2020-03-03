@@ -9,6 +9,7 @@
 #define IDR_MAINFRAME                   128
 #define IDR_ACCELERATOR1                136
 #define IDD_ABOUT1                      141
+#define IDD_FILECAPTURE_DIALOG          143
 #define IDC_OUTPUT_DEVICE_COMBO         1007
 #define IDC_PREVIEW_BOX                 1008
 #define IDC_POSITION_SLIDER             1009
@@ -27,16 +28,22 @@
 #define IDC_AUDIO_CHANNEL               1030
 #define IDC_AUDIO_BIT_DEPTH             1031
 #define IDC_TEST_ABOUT                  1033
-#define IDC_EDIT1                       1034
 #define IDC_CONNECTED_DECKLINK          1034
+#define IDC_PREVIEW_BOX_FC              1036
+#define IDC_INPUT_DEVICE_COMBO          1037
+#define IDC_INPUT_CONNECTION_COMBO      1038
+#define IDC_INPUT_MODE_COMBO            1039
+#define IDC_RECORD_BUTTON               1040
+#define IDC_AUTODETECT_FORMAT_CHECK     1041
+#define IDC_FILE_CAPTURE                1042
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        143
+#define _APS_NEXT_RESOURCE_VALUE        145
 #define _APS_NEXT_COMMAND_VALUE         32782
-#define _APS_NEXT_CONTROL_VALUE         1035
+#define _APS_NEXT_CONTROL_VALUE         1043
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
