@@ -119,6 +119,7 @@ BEGIN
     GROUPBOX        "Decklink Output Information",IDC_STATIC,325,250,191,126
     LTEXT           "Audio Bit Depth:",IDC_STATIC,335,306,61,8
     EDITTEXT        IDC_AUDIO_BIT_DEPTH,419,306,71,14,ES_AUTOHSCROLL | ES_READONLY,WS_EX_TRANSPARENT
+    PUSHBUTTON      "About",IDC_TEST_ABOUT,7,362,50,14
 END
 
 
@@ -233,6 +234,53 @@ END
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ZZZ)
 LANGUAGE LANG_ENGLISH, 0xE
 #pragma code_page(1252)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUT1 DIALOGEX 0, 0, 187, 72
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "About File Playback"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,130,51,50,14
+    ICON            IDR_MAINFRAME,IDC_STATIC,17,18,21,20,SS_CENTERIMAGE
+    LTEXT           "FilePlayback, Version 1.0",IDC_STATIC,51,18,114,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2009",IDC_STATIC,51,30,114,8
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_ABOUT1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 180
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 65
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_ABOUT1 AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
 
 /////////////////////////////////////////////////////////////////////////////
 //

@@ -108,6 +108,7 @@ private:
 	CButton						m_loopButton;
 	CButton						m_autoplayButton;
 	CButton						m_nextButton;
+	CButton						m_aboutButton;
 	CComboBox					m_deviceListCombo;
 	CListBox					m_playlist;
 	CEdit						m_videoFormatEdit;
@@ -162,6 +163,5 @@ public:
 	virtual BOOL	PreTranslateMessage(MSG* pMsg);
 	void			LoopCheck();
 	void			AutoplayCheck();
-
-	afx_msg void OnEnChangeEdit2();
+	afx_msg void OnBnClickedTestAbout();
 };

@@ -33,7 +33,7 @@
 #include "FilePlaybackDlg.h"
 #include "SourceReader.h"
 #include "windows.h"
-#include <sstream>
+#include "About.h"
 
 // This is fixed (static) values to get 16 bit 48Khz output
 static const BMDAudioSampleType	kAudioSampleType	= bmdAudioSampleType16bitInteger;
@@ -92,6 +92,7 @@ void CFilePlaybackDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_DURATION_EDIT, m_fileDurationEdit);
 	DDX_Control(pDX, IDC_POSITION_SLIDER, m_filePositionSlider);
 	DDX_Control(pDX, IDC_PREVIEW_BOX, m_previewBox);
+	DDX_Control(pDX, IDC_TEST_ABOUT, m_aboutButton);
 	DDX_Check(pDX, IDC_LOOP, m_loopCheck);
 	DDX_Check(pDX, IDC_AUTOPLAY_CHECK, m_autoplayCheck);
 }
@@ -122,6 +123,7 @@ BEGIN_MESSAGE_MAP(CFilePlaybackDlg, CDialog)
 	ON_WM_HSCROLL()
 	ON_WM_CLOSE()
 	ON_EN_CHANGE(IDC_VIDEO_FORMAT_EDIT, &CFilePlaybackDlg::OnEnChangeVideoFormatEdit)
+	ON_BN_CLICKED(IDC_TEST_ABOUT, &CFilePlaybackDlg::OnBnClickedTestAbout)
 END_MESSAGE_MAP()
 
 
@@ -928,4 +930,10 @@ void CFilePlaybackDlg::AutoplayCheck()
 {
 	// TODO: Add your implementation code here.
 	OnBnClickedNextFile();
+}
+
+void CFilePlaybackDlg::OnBnClickedTestAbout()
+{
+	About dlg;
+	dlg.DoModal();
 }

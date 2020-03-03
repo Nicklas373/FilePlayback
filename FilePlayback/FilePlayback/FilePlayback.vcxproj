@@ -212,6 +212,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="About.cpp" />
     <ClCompile Include="DeckLinkAPI_i.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -239,6 +240,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="About.h" />
     <ClInclude Include="PlaybackAudioPacket.h" />
     <ClInclude Include="PlaybackVideoFrame.h" />
     <ClInclude Include="ProfileCallback.h" />
