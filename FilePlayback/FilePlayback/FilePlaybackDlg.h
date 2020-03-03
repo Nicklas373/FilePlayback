@@ -111,6 +111,8 @@ private:
 	CComboBox					m_deviceListCombo;
 	CListBox					m_playlist;
 	CEdit						m_videoFormatEdit;
+	CEdit						m_audioChannelEdit;
+	CEdit						m_audioBitDepthEdit;
 	CEdit						m_fileNameEdit;
 	CEdit						m_filePositionEdit;
 	CEdit						m_fileDurationEdit;
@@ -161,4 +163,5 @@ public:
 	void			LoopCheck();
 	void			AutoplayCheck();
 
+	afx_msg void OnEnChangeEdit2();
 };

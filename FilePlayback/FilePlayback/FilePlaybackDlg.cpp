@@ -33,6 +33,7 @@
 #include "FilePlaybackDlg.h"
 #include "SourceReader.h"
 #include "windows.h"
+#include <sstream>
 
 // This is fixed (static) values to get 16 bit 48Khz output
 static const BMDAudioSampleType	kAudioSampleType	= bmdAudioSampleType16bitInteger;
@@ -84,6 +85,8 @@ void CFilePlaybackDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_OUTPUT_DEVICE_COMBO, m_deviceListCombo);
 	DDX_Control(pDX, IDC_PLAYLIST, m_playlist);
 	DDX_Control(pDX, IDC_VIDEO_FORMAT_EDIT, m_videoFormatEdit);
+	DDX_Control(pDX, IDC_AUDIO_CHANNEL, m_audioChannelEdit);
+	DDX_Control(pDX, IDC_AUDIO_BIT_DEPTH, m_audioBitDepthEdit);
 	DDX_Control(pDX, IDC_FILETITLE_EDIT, m_fileNameEdit);
 	DDX_Control(pDX, IDC_POSITION_EDIT, m_filePositionEdit);
 	DDX_Control(pDX, IDC_DURATION_EDIT, m_fileDurationEdit);
@@ -734,9 +737,18 @@ LRESULT CFilePlaybackDlg::OnUpdateStreamTime(WPARAM wParam, LPARAM lParam)
 
 LRESULT CFilePlaybackDlg::OnOutputEnabled(WPARAM wParam, LPARAM lParam)
 {
-	CString displayModeName;
+	// Show Declink Output Information
+	CString displayModeName; // Show Full Video Codec Information
+	CString displayAudioChannel; // Show Audio Channel Information
+	CString displayAudioBitDepth; // Show Audio Bit Depth Information
+
+	displayAudioChannel.Format(_T(""), kAudioChannelCount);
+	displayAudioBitDepth.Format(_T(""), kAudioSampleType);
+
 	if (m_selectedDevice->GetDisplayModeName(displayModeName) == S_OK)
 		m_videoFormatEdit.SetWindowText(displayModeName);
+		m_audioChannelEdit.SetWindowText(displayAudioChannel);
+		m_audioBitDepthEdit.SetWindowText(displayAudioBitDepth);
 
 	m_playbackState = PlaybackState::OutputEnabled;
 	UpdateInterface();
@@ -746,7 +758,10 @@ LRESULT CFilePlaybackDlg::OnOutputEnabled(WPARAM wParam, LPARAM lParam)
 
 LRESULT CFilePlaybackDlg::OnOutputDisabled(WPARAM wParam, LPARAM lParam)
 {
+	// Cleanup initialization after output disabled
 	m_videoFormatEdit.SetWindowText(_T(""));
+	m_audioChannelEdit.SetWindowText(_T(""));
+	m_audioBitDepthEdit.SetWindowText(_T(""));
 
 	m_playbackState = PlaybackState::OutputDisabled;
 	UpdateInterface();

@@ -1,1 +1,10 @@
-﻿  FilePlayback.vcxproj -> C:\Users\MAGANG\Downloads\Compressed\Test\FilePlayback\FilePlayback\Win32\Debug\FilePlayback.exe
+﻿cl : command line warning D9035: option 'Gm' has been deprecated and will be removed in a future release
+  FilePlaybackDlg.cpp
+C:\Users\MAGANG\Downloads\Compressed\Test\FilePlayback\FilePlayback\FilePlaybackDlg.cpp(694,33): warning C4018: '>=': signed/unsigned mismatch
+C:\Users\MAGANG\Downloads\Compressed\Test\FilePlayback\FilePlayback\FilePlaybackDlg.cpp(695,31): warning C4018: '>=': signed/unsigned mismatch
+  Generating Code...
+  Compiling...
+  FilePlayback.cpp
+  DeckLinkOutputDevice.cpp
+  Generating Code...
+  FilePlayback.vcxproj -> C:\Users\MAGANG\Downloads\Compressed\Test\FilePlayback\FilePlayback\Win32\Debug\FilePlayback.exe
