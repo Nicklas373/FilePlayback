@@ -32,7 +32,7 @@
 
 #include <thread>
 #include "resource.h"
-#include "AudioSampleQueue_fc.h"
+#include "AudioSampleQueue.h"
 #include "DeckLinkInputDevice.h"
 #include "DeckLinkDeviceDiscovery.h"
 #include "PreviewWindow.h"

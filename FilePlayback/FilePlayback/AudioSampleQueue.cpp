@@ -27,8 +27,8 @@
 
 #include "stdafx.h"
 #include "mfapi.h"
-#include "SampleQueue_fc.h"
-#include "AudioSampleQueue_fc.h"
+#include "SampleQueue.h"
+#include "AudioSampleQueue.h"
 
 AudioSampleQueue::AudioSampleQueue(uint32_t channelCount, BMDAudioSampleType sampleBitDepth)
 	: m_refCount(1),

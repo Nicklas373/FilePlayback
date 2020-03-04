@@ -36,7 +36,7 @@
 #include <functional>
 #include <mutex>
 #include "mfreadwrite.h"
-#include "AudioSampleQueue_fc.h"
+#include "AudioSampleQueue.h"
 #include "SampleMemoryAllocator.h"
 #include "DeckLinkAPI_h.h"
 

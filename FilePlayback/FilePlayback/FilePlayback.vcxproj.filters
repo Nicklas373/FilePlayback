@@ -51,9 +51,6 @@
     <ClCompile Include="About.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AudioSampleQueue_fc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="FileCapture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -69,7 +66,10 @@
     <ClCompile Include="SinkWriter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Magang-20200225T022114Z-001\Magang\FilePlayback\FilePlayback\PreviewWindow.cpp">
+    <ClCompile Include="PreviewWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSampleQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -110,12 +110,6 @@
     <ClInclude Include="About.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AudioSampleQueue_fc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SampleQueue_fc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FileCapture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -132,6 +126,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PreviewWindow.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSampleQueue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SampleQueue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

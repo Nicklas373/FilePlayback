@@ -27,7 +27,7 @@
 
 #include "stdafx.h"
 #include "mfapi.h"
-#include "SampleQueue_fc.h"
+#include "SampleQueue.h"
 #include "SampleMemoryAllocator.h"
 
 SampleMemoryAllocator::SampleMemoryAllocator()

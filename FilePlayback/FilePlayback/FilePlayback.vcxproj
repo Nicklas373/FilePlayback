@@ -212,9 +212,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\Magang-20200225T022114Z-001\Magang\FilePlayback\FilePlayback\PreviewWindow.cpp" />
     <ClCompile Include="About.cpp" />
-    <ClCompile Include="AudioSampleQueue_fc.cpp" />
+    <ClCompile Include="AudioSampleQueue.cpp" />
     <ClCompile Include="DeckLinkAPI_i.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
       </PrecompiledHeader>
@@ -233,7 +232,7 @@
     <ClCompile Include="ProfileCallback.cpp" />
     <ClCompile Include="FilePlayback.cpp" />
     <ClCompile Include="FilePlaybackDlg.cpp" />
-	<ClCompile Include="PreviewWindow.cpp" />
+    <ClCompile Include="PreviewWindow.cpp" />
     <ClCompile Include="DeckLinkOutputDevice.cpp" />
     <ClCompile Include="DeckLinkDeviceDiscovery.cpp" />
     <ClCompile Include="SampleMemoryAllocator.cpp" />
@@ -248,7 +247,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="About.h" />
-    <ClInclude Include="AudioSampleQueue_fc.h" />
+    <ClInclude Include="AudioSampleQueue.h" />
     <ClInclude Include="DeckLinkInputDevice.h" />
     <ClInclude Include="FileCapture.h" />
     <ClInclude Include="FileCaptureDlg.h" />
@@ -262,7 +261,7 @@
     <ClInclude Include="DeckLinkOutputDevice.h" />
     <ClInclude Include="DeckLinkDeviceDiscovery.h" />
     <ClInclude Include="SampleMemoryAllocator.h" />
-    <ClInclude Include="SampleQueue_fc.h" />
+    <ClInclude Include="SampleQueue.h" />
     <ClInclude Include="SinkWriter.h" />
     <ClInclude Include="SourceReader.h" />
     <ClInclude Include="stdafx.h" />
