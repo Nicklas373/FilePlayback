@@ -232,41 +232,64 @@ void CFilePlaybackDlg::OnBnClickedPlayPause()
 
 void CFilePlaybackDlg::OnBnClickedNextFile()
 {
+	// Count currently file on playlist
+	CString str;
 	int total_playlist = m_playlist.GetCount();
-	AfxMessageBox(total_playlist);
 	if (total_playlist <= 1)
 	{
-		AfxMessageBox(_T("No video file left"));
-	}
-	else
-	{
+		str.Format(_T("Total playlist is %d"), total_playlist);
+		AfxMessageBox(_T("Can't next playlist !"));
+		AfxMessageBox(str);
+	} else {
+		// Count total file with current selected file on the playlist
+		// So playlist will stop when reach end of playlist or not selected
+		// In the playlist
 		int curIndex = 0;
 		CString nextPath;
 		curIndex = m_playlist.FindStringExact(curIndex, currentFilename);
+		
 		if (curIndex + 1 == total_playlist) {
 			m_playlist.GetText(0, nextPath);
+			AfxMessageBox(_T("End of playlist !"));
+			AfxMessageBox(_T("Please select file on the playlist"));
+		} else {
+			m_playlist.GetText((curIndex + 1), nextPath);
+
+			// Check decklink status
+			if (m_selectedDevice != nullptr)
+			{
+				// Check playback state
+				if (m_playbackState == PlaybackState::OutputEnabled)
+				{
+					// Stop playback and uninitiliaze it
+					DisableVideoOutput();
+					m_selectedDevice->StopScheduledPlayback();
+					m_sourceReader->Uninitialize();
+
+					// Reset playback duration
+					m_filePositionSlider.SetPos(0);
+					m_fileDurationEdit.SetWindowTextW(SecondsToHMS(0));
+					m_fileNameEdit.SetWindowTextW(0);
+					m_selectedDevice->DisableOutput();
+					m_playbackState = PlaybackState::OutputDisabled;
+				}
+
+				// Reinitialize playback
+				m_sourceReader->Initialize(CString(nextPath));
+				m_sourceReader->GetFileDuration(&m_fileDuration);
+				m_filePositionSlider.SetPos(0);
+				m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
+				m_fileNameEdit.SetWindowTextW(nextPath);
+				currentFilename = nextPath;
+
+				// Reenable video output if it was disabled
+				if (m_playbackState == PlaybackState::OutputDisabled)
+					EnableVideoOutput();
+			} else {
+					AfxMessageBox(_T("No Connected Decklink"));
+			}
 		}
-		else m_playlist.GetText((curIndex + 1), nextPath);
-
-		m_selectedDevice->StopScheduledPlayback();
-		m_sourceReader->Uninitialize();
-		m_filePositionSlider.SetPos(0);
-		m_fileDurationEdit.SetWindowTextW(SecondsToHMS(0));
-		m_fileNameEdit.SetWindowTextW(0);
-		m_selectedDevice->DisableOutput();
-		m_playbackState = PlaybackState::OutputDisabled;
-
-		m_sourceReader->Initialize(CString(nextPath));
-		m_sourceReader->GetFileDuration(&m_fileDuration);
-		m_filePositionSlider.SetPos(0);
-		m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
-		m_fileNameEdit.SetWindowTextW(nextPath);
-		currentFilename = nextPath;
-		if ((m_playbackState == PlaybackState::OutputDisabled) && (m_selectedDevice != nullptr))
-			EnableVideoOutput();
-		//StartScheduledPlayback();
 	}
-	
 }
 
 void CFilePlaybackDlg::OnBnClickedLoopCheck()
