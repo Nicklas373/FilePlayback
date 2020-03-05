@@ -116,6 +116,7 @@ private:
 	CListBox					m_playlist;
 	CEdit						m_videoFormatEdit;
 	CEdit						m_audioChannelEdit;
+	CEdit						m_audioBitDepthEdit;
 	CEdit						m_fileNameEdit;
 	CEdit						m_filePositionEdit;
 	CEdit						m_fileDurationEdit;
@@ -169,4 +170,5 @@ public:
 	afx_msg void OnEnChangeAudioChannel();
 	afx_msg void OnBnClickedFileCapture();
 	afx_msg void OnBnClickedPrevButton();
+	afx_msg void OnEnChangeAudioBd();
 };

@@ -38,8 +38,8 @@
 #include "FileCaptureDlg.h"
 
 // This is fixed (static) values to get 16 bit 48Khz output
-static const BMDAudioSampleType	kAudioSampleType	= bmdAudioSampleType16bitInteger;
-static const uint32_t			kAudioChannelCount	= 2;
+static const BMDAudioSampleType	kAudioSampleType		= bmdAudioSampleType16bitInteger;
+static const uint32_t			kAudioChannelCount		= 2;
 
 // Declare Filename as null and slider range value
 CString							currentFilename = NULL;
@@ -88,6 +88,7 @@ void CFilePlaybackDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PLAYLIST, m_playlist);
 	DDX_Control(pDX, IDC_VIDEO_FORMAT_EDIT, m_videoFormatEdit);
 	DDX_Control(pDX, IDC_AUDIO_CHANNEL, m_audioChannelEdit);
+	DDX_Control(pDX, IDC_AUDIO_BIT_DEPTH, m_audioBitDepthEdit);
 	DDX_Control(pDX, IDC_FILETITLE_EDIT, m_fileNameEdit);
 	DDX_Control(pDX, IDC_POSITION_EDIT, m_filePositionEdit);
 	DDX_Control(pDX, IDC_DURATION_EDIT, m_fileDurationEdit);
@@ -129,6 +130,7 @@ BEGIN_MESSAGE_MAP(CFilePlaybackDlg, CDialog)
 	ON_EN_CHANGE(IDC_AUDIO_CHANNEL, &CFilePlaybackDlg::OnEnChangeAudioChannel)
 	ON_BN_CLICKED(IDC_FILE_CAPTURE, &CFilePlaybackDlg::OnBnClickedFileCapture)
 	ON_BN_CLICKED(IDC_PREV_BUTTON, &CFilePlaybackDlg::OnBnClickedPrevButton)
+	ON_EN_CHANGE(IDC_AUDIO_BD, &CFilePlaybackDlg::OnEnChangeAudioBd)
 END_MESSAGE_MAP()
 
 // CFilePlaybackDlg message handlers
@@ -829,15 +831,19 @@ LRESULT CFilePlaybackDlg::OnOutputEnabled(WPARAM wParam, LPARAM lParam)
 	// Show Declink Output Information
 	CString displayModeName; // Show Full Video Codec Information
 	CString displayAudioChannel; // Show Audio Channel Information
+	CString displayAudioBitDepth; // Show Audio Bit Depth Information
 
 	// Make sure if user already selected decklink before playback
 	if (m_selectedDevice != nullptr)
 	{
-		MessageBox(_T("Connected to Decklink"));
+		// Get value for audio channel & bit depth
+		displayAudioChannel.Format(_T("%d"), kAudioChannelCount);
+		displayAudioBitDepth.Format(_T("%d"), kAudioSampleType);
 
 		if (m_selectedDevice->GetDisplayModeName(displayModeName) == S_OK) {
 			m_videoFormatEdit.SetWindowText(displayModeName);
 			m_audioChannelEdit.SetWindowText(displayAudioChannel);
+			m_audioBitDepthEdit.SetWindowText(displayAudioBitDepth);
 		}
 
 		m_playbackState = PlaybackState::OutputEnabled;
@@ -850,6 +856,7 @@ LRESULT CFilePlaybackDlg::OnOutputEnabled(WPARAM wParam, LPARAM lParam)
 		// Disable Video Output if no decklink device selected
 		m_videoFormatEdit.SetWindowText(_T(""));
 		m_audioChannelEdit.SetWindowText(_T(""));
+		m_audioBitDepthEdit.SetWindowText(_T(""));
 
 		m_playbackState = PlaybackState::OutputDisabled;
 		UpdateInterface();
@@ -863,6 +870,7 @@ LRESULT CFilePlaybackDlg::OnOutputDisabled(WPARAM wParam, LPARAM lParam)
 	// Cleanup initialization after output disabled
 	m_videoFormatEdit.SetWindowText(_T(""));
 	m_audioChannelEdit.SetWindowText(_T(""));
+	m_audioBitDepthEdit.SetWindowText(_T(""));
 
 	m_playbackState = PlaybackState::OutputDisabled;
 	UpdateInterface();
@@ -1007,6 +1015,17 @@ void CFilePlaybackDlg::OnEnChangeAudioChannel()
 	// TODO:  Add your control notification handler code here
 }
 
+
+void CFilePlaybackDlg::OnEnChangeAudioBd()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialog::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+}
+
 BOOL CFilePlaybackDlg::PreTranslateMessage(MSG* pMsg)
 {
 	// TODO: Add your specialized code here and/or call the base class
@@ -1018,7 +1037,6 @@ BOOL CFilePlaybackDlg::PreTranslateMessage(MSG* pMsg)
 
 	return CDialog::PreTranslateMessage(pMsg);
 }
-
 
 void CFilePlaybackDlg::LoopCheck()
 {
