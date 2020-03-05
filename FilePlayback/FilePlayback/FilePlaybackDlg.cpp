@@ -57,7 +57,6 @@ static CString SecondsToHMS(int64_t seconds)
 	return retString;
 }
 
-
 CFilePlaybackDlg::CFilePlaybackDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(CFilePlaybackDlg::IDD, pParent),
 	m_deckLinkDiscovery(nullptr),
@@ -88,7 +87,6 @@ void CFilePlaybackDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PLAYLIST, m_playlist);
 	DDX_Control(pDX, IDC_VIDEO_FORMAT_EDIT, m_videoFormatEdit);
 	DDX_Control(pDX, IDC_AUDIO_CHANNEL, m_audioChannelEdit);
-	DDX_Control(pDX, IDC_AUDIO_BIT_DEPTH, m_audioBitDepthEdit);
 	DDX_Control(pDX, IDC_FILETITLE_EDIT, m_fileNameEdit);
 	DDX_Control(pDX, IDC_POSITION_EDIT, m_filePositionEdit);
 	DDX_Control(pDX, IDC_DURATION_EDIT, m_fileDurationEdit);
@@ -128,13 +126,10 @@ BEGIN_MESSAGE_MAP(CFilePlaybackDlg, CDialog)
 	ON_EN_CHANGE(IDC_VIDEO_FORMAT_EDIT, &CFilePlaybackDlg::OnEnChangeVideoFormatEdit)
 	ON_BN_CLICKED(IDC_TEST_ABOUT, &CFilePlaybackDlg::OnBnClickedTestAbout)
 	ON_EN_CHANGE(IDC_AUDIO_CHANNEL, &CFilePlaybackDlg::OnEnChangeAudioChannel)
-	ON_EN_CHANGE(IDC_AUDIO_BIT_DEPTH, &CFilePlaybackDlg::OnEnChangeAudioBitDepth)
 	ON_BN_CLICKED(IDC_FILE_CAPTURE, &CFilePlaybackDlg::OnBnClickedFileCapture)
 END_MESSAGE_MAP()
 
-
 // CFilePlaybackDlg message handlers
-
 BOOL CFilePlaybackDlg::OnInitDialog()
 {
 	bool			success = false;
@@ -148,7 +143,6 @@ BOOL CFilePlaybackDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
-	
 	m_filePositionSlider.SetRange(0, kFilePositionSliderRange);
 	m_filePositionEdit.SetWindowTextW(SecondsToHMS(0));
 	m_fileDurationEdit.SetWindowTextW(SecondsToHMS(0));
@@ -163,7 +157,6 @@ BOOL CFilePlaybackDlg::OnInitDialog()
 	// Create source reader callback
 	m_sourceReader.Attach(new SourceReader());
 
-	//
 	// Create and enable DeckLink device discovery callback interface object
 	m_deckLinkDiscovery.Attach(new DeckLinkDeviceDiscovery());
 	if (m_deckLinkDiscovery != nullptr)
@@ -748,54 +741,32 @@ LRESULT CFilePlaybackDlg::OnOutputEnabled(WPARAM wParam, LPARAM lParam)
 	// Show Declink Output Information
 	CString displayModeName; // Show Full Video Codec Information
 	CString displayAudioChannel; // Show Audio Channel Information
-	CString displayAudioBitDepth; // Show Audio Bit Depth Information
-	CString displayConnectedDecklink; // Show Connected Decklink Devices
-	int		selectedDeviceIndex; // User Chosen Decklink Devices
 
-	// Check Selected Declink Devices from user
-	selectedDeviceIndex = m_deviceListCombo.GetCurSel();
-	if (selectedDeviceIndex < 0) {
+	// Make sure if user already selected decklink before playback
+	if (m_selectedDevice != nullptr)
+	{
+		MessageBox(_T("Connected to Decklink"));
+
+		if (m_selectedDevice->GetDisplayModeName(displayModeName) == S_OK) {
+			m_videoFormatEdit.SetWindowText(displayModeName);
+			m_audioChannelEdit.SetWindowText(displayAudioChannel);
+		}
+
+		m_playbackState = PlaybackState::OutputEnabled;
+		UpdateInterface();
+
 		return 0;
-	}
-	else {
-		// Make sure if user already selected decklink before playback
-		if (m_selectedDevice != nullptr)
-		{
-			MessageBox(_T("Connected to Decklink"));
+	} else {
+		MessageBox(_T("No Decklink Device Selected."), _T("Error"));
 
-			// Get Decklink Name from user combobox
-			CString cStr;
-			CWnd* Pfield = GetDlgItem(IDC_OUTPUT_DEVICE_COMBO);
-			Pfield->GetWindowText(cStr);
+		// Disable Video Output if no decklink device selected
+		m_videoFormatEdit.SetWindowText(_T(""));
+		m_audioChannelEdit.SetWindowText(_T(""));
 
-			displayAudioChannel.Format(_T(""), kAudioChannelCount);
-			displayAudioBitDepth.Format(_T(""), kAudioSampleType);
-			displayConnectedDecklink.Format(_T(""), Pfield);
+		m_playbackState = PlaybackState::OutputDisabled;
+		UpdateInterface();
 
-			if (m_selectedDevice->GetDisplayModeName(displayModeName) == S_OK) {
-				m_videoFormatEdit.SetWindowText(displayModeName);
-				m_audioChannelEdit.SetWindowText(displayAudioChannel);
-				m_audioBitDepthEdit.SetWindowText(displayAudioBitDepth);
-			}
-
-			m_playbackState = PlaybackState::OutputEnabled;
-			UpdateInterface();
-
-			return 0;
-		}
-		else {
-			MessageBox(_T("No Decklink Device Selected."), _T("Error"));
-
-			// Disable Video Output if no decklink device selected
-			m_videoFormatEdit.SetWindowText(_T(""));
-			m_audioChannelEdit.SetWindowText(_T(""));
-			m_audioBitDepthEdit.SetWindowText(_T(""));
-
-			m_playbackState = PlaybackState::OutputDisabled;
-			UpdateInterface();
-
-			return 0;
-		}
+		return 0;
 	}
 }
 
@@ -804,7 +775,6 @@ LRESULT CFilePlaybackDlg::OnOutputDisabled(WPARAM wParam, LPARAM lParam)
 	// Cleanup initialization after output disabled
 	m_videoFormatEdit.SetWindowText(_T(""));
 	m_audioChannelEdit.SetWindowText(_T(""));
-	m_audioBitDepthEdit.SetWindowText(_T(""));
 
 	m_playbackState = PlaybackState::OutputDisabled;
 	UpdateInterface();
@@ -940,16 +910,6 @@ void CFilePlaybackDlg::OnEnChangeVideoFormatEdit()
 }
 
 void CFilePlaybackDlg::OnEnChangeAudioChannel()
-{
-	// TODO:  If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialog::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
-
-	// TODO:  Add your control notification handler code here
-}
-
-void CFilePlaybackDlg::OnEnChangeAudioBitDepth()
 {
 	// TODO:  If this is a RICHEDIT control, the control will not
 	// send this notification unless you override the CDialog::OnInitDialog()

@@ -34,8 +34,6 @@
 #include "FileCapture.h"
 #include "FileCaptureDlg.h"
 
-
-
 static const std::list<std::pair<BMDVideoConnection, CString>> kInputConnections =
 {
 	{ bmdVideoConnectionSDI,		_T("SDI") },
@@ -51,6 +49,7 @@ static const UINT kStatusBarIndicators[] =
 	ID_SEPARATOR
 };
 
+// This is fixed (static) values to get 16 bit 48Khz output
 static const BMDAudioSampleType		kAudioSampleDepth	= bmdAudioSampleType16bitInteger;
 static const uint32_t				kAudioChannelCount	= 2;
 
