@@ -83,6 +83,7 @@ void CFilePlaybackDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LOOP, m_loopButton);
 	DDX_Control(pDX, IDC_AUTOPLAY_CHECK, m_autoplayButton);
 	DDX_Control(pDX, IDC_NEXT_BUTTON, m_nextButton);
+	DDX_Control(pDX, IDC_PREV_BUTTON, m_prevButton);
 	DDX_Control(pDX, IDC_OUTPUT_DEVICE_COMBO, m_deviceListCombo);
 	DDX_Control(pDX, IDC_PLAYLIST, m_playlist);
 	DDX_Control(pDX, IDC_VIDEO_FORMAT_EDIT, m_videoFormatEdit);
@@ -127,6 +128,7 @@ BEGIN_MESSAGE_MAP(CFilePlaybackDlg, CDialog)
 	ON_BN_CLICKED(IDC_TEST_ABOUT, &CFilePlaybackDlg::OnBnClickedTestAbout)
 	ON_EN_CHANGE(IDC_AUDIO_CHANNEL, &CFilePlaybackDlg::OnEnChangeAudioChannel)
 	ON_BN_CLICKED(IDC_FILE_CAPTURE, &CFilePlaybackDlg::OnBnClickedFileCapture)
+	ON_BN_CLICKED(IDC_PREV_BUTTON, &CFilePlaybackDlg::OnBnClickedPrevButton)
 END_MESSAGE_MAP()
 
 // CFilePlaybackDlg message handlers
@@ -287,6 +289,69 @@ void CFilePlaybackDlg::OnBnClickedNextFile()
 					EnableVideoOutput();
 			} else {
 					AfxMessageBox(_T("No Connected Decklink"));
+			}
+		}
+	}
+}
+
+void CFilePlaybackDlg::OnBnClickedPrevButton()
+{	
+	// Count total file with current selected file on the playlist
+	// So playlist will stop when reach end of playlist or not selected
+	// In the playlist
+	CString str;
+	CString prevPath;
+	int curIndex = 0;
+	curIndex = m_playlist.FindStringExact(curIndex, currentFilename);
+	int total_playlist = m_playlist.GetCount();
+	if (total_playlist <= 1)
+	{
+		str.Format(_T("Total playlist is %d"), total_playlist);
+		AfxMessageBox(_T("Can't previous playlist !"));
+		AfxMessageBox(str);
+	}
+	else {
+		if (curIndex <= 0) {
+			m_playlist.GetText((curIndex = 0), prevPath);
+			AfxMessageBox(_T("End of playlist !"));
+			AfxMessageBox(_T("Please select file on the playlist"));
+		}
+		else {
+			m_playlist.GetText((curIndex - 1), prevPath);
+
+			// Check decklink status
+			if (m_selectedDevice != nullptr)
+			{
+				// Check playback state
+				if (m_playbackState == PlaybackState::OutputEnabled)
+				{
+					// Stop playback and uninitiliaze it
+					DisableVideoOutput();
+					m_selectedDevice->StopScheduledPlayback();
+					m_sourceReader->Uninitialize();
+
+					// Reset playback duration
+					m_filePositionSlider.SetPos(0);
+					m_fileDurationEdit.SetWindowTextW(SecondsToHMS(0));
+					m_fileNameEdit.SetWindowTextW(0);
+					m_selectedDevice->DisableOutput();
+					m_playbackState = PlaybackState::OutputDisabled;
+				}
+
+				// Reinitialize playback
+				m_sourceReader->Initialize(CString(prevPath));
+				m_sourceReader->GetFileDuration(&m_fileDuration);
+				m_filePositionSlider.SetPos(0);
+				m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
+				m_fileNameEdit.SetWindowTextW(prevPath);
+				currentFilename = prevPath;
+
+				// Reenable video output if it was disabled
+				if (m_playbackState == PlaybackState::OutputDisabled)
+					EnableVideoOutput();
+			}
+			else {
+				AfxMessageBox(_T("No Connected Decklink"));
 			}
 		}
 	}

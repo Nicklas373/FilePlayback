@@ -119,6 +119,7 @@ BEGIN
     GROUPBOX        "Decklink Output Information",IDC_STATIC,325,250,191,126
     PUSHBUTTON      "About",IDC_TEST_ABOUT,7,362,50,14
     PUSHBUTTON      "File Capture",IDC_FILE_CAPTURE,63,362,50,14
+    PUSHBUTTON      "Previous",IDC_PREV_BUTTON,217,289,50,14
 END
 
 

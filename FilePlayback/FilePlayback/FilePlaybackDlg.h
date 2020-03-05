@@ -74,6 +74,7 @@ public:
 	afx_msg void	OnBnClickedOpenFile();
 	afx_msg void	OnBnClickedDeleteFile();
 	afx_msg void	OnBnClickedNextFile();
+	afx_msg void	OnBnClickedPrevFile();
 	afx_msg void	OnLbnDblclkPlay();
 	afx_msg void	OnBnClickedResetPlaylist();
 	afx_msg void	OnBnClickedLoopCheck();
@@ -108,6 +109,7 @@ private:
 	CButton						m_loopButton;
 	CButton						m_autoplayButton;
 	CButton						m_nextButton;
+	CButton						m_prevButton;
 	CButton						m_aboutButton;
 	CButton						m_fileCapture;
 	CComboBox					m_deviceListCombo;
@@ -166,4 +168,5 @@ public:
 	afx_msg void OnBnClickedTestAbout();
 	afx_msg void OnEnChangeAudioChannel();
 	afx_msg void OnBnClickedFileCapture();
+	afx_msg void OnBnClickedPrevButton();
 };
