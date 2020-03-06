@@ -244,19 +244,21 @@ void CFilePlaybackDlg::OnBnClickedNextFile()
 		str.Format(_T("Total playlist is %d"), total_playlist);
 		AfxMessageBox(_T("Can't next playlist !"));
 		AfxMessageBox(str);
-	} else {
+	}
+	else {
 		// Count total file with current selected file on the playlist
 		// So playlist will stop when reach end of playlist or not selected
 		// In the playlist
 		int curIndex = 0;
 		CString nextPath;
 		curIndex = m_playlist.FindStringExact(curIndex, currentFilename);
-		
+
 		if (curIndex + 1 == total_playlist) {
 			m_playlist.GetText(0, nextPath);
 			AfxMessageBox(_T("End of playlist !"));
 			AfxMessageBox(_T("Please select file on the playlist"));
-		} else {
+		}
+		else {
 			m_playlist.GetText((curIndex + 1), nextPath);
 
 			// Check decklink status
@@ -289,15 +291,35 @@ void CFilePlaybackDlg::OnBnClickedNextFile()
 				// Reenable video output if it was disabled
 				if (m_playbackState == PlaybackState::OutputDisabled)
 					EnableVideoOutput();
-			} else {
-					AfxMessageBox(_T("No Connected Decklink"));
+					UpdateInterface();
+			}
+			else {
+				AfxMessageBox(_T("No Connected Decklink"));
 			}
 		}
 	}
 }
 
 void CFilePlaybackDlg::OnBnClickedPrevButton()
-{	
+{
+	// Check if playback already running or no
+	if (m_playbackState == PlaybackState::OutputEnabled)
+	{
+		DisableVideoOutput();
+		if (m_endOfStream)
+		{
+			// If we have previously reached end of stream, then start from beginning
+			m_filePosition = 0;
+			m_filePositionSlider.SetPos(0);
+			m_filePositionEdit.SetWindowText(SecondsToHMS(m_filePosition / kMFTimescale));
+			SeekPosition();
+		}
+		StopScheduledPlayback();
+	}
+
+	if (m_playbackState == PlaybackState::ScheduledPlayback)
+		StopScheduledPlayback();
+
 	// Count total file with current selected file on the playlist
 	// So playlist will stop when reach end of playlist or not selected
 	// In the playlist
@@ -351,6 +373,7 @@ void CFilePlaybackDlg::OnBnClickedPrevButton()
 				// Reenable video output if it was disabled
 				if (m_playbackState == PlaybackState::OutputDisabled)
 					EnableVideoOutput();
+					UpdateInterface();
 			}
 			else {
 				AfxMessageBox(_T("No Connected Decklink"));
@@ -1043,7 +1066,7 @@ void CFilePlaybackDlg::LoopCheck()
 	// TODO: Add your implementation code here.
 	//OnBnClickedPlayPause();
 	//m_endOfStream = false;
-	AfxMessageBox(_T("Worked!"));
+	//AfxMessageBox(_T("Worked!"));
 	//m_filePosition = 0;
 	//m_filePositionEdit.SetWindowText(SecondsToHMS(m_filePosition / kMFTimescale));
 	//SeekPosition();

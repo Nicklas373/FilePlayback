@@ -112,6 +112,7 @@ private:
 	CButton						m_prevButton;
 	CButton						m_aboutButton;
 	CButton						m_fileCapture;
+	CButton						m_stopButton;
 	CComboBox					m_deviceListCombo;
 	CListBox					m_playlist;
 	CEdit						m_videoFormatEdit;
