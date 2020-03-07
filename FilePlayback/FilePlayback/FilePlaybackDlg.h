@@ -70,12 +70,13 @@ public:
 	// Playback state
 	enum class PlaybackState { OutputDisabled, OutputEnabled, ScheduledPlayback };
 
-	afx_msg void	OnBnClickedPlayPause();
+	afx_msg void	OnBnClickedPlay();
 	afx_msg void	OnBnClickedOpenFile();
 	afx_msg void	OnBnClickedDeleteFile();
 	afx_msg void	OnBnClickedNextFile();
 	afx_msg void	OnBnClickedPrevFile();
 	afx_msg void	OnLbnDblclkPlay();
+	afx_msg void	OnLbcRTclkPlay();
 	afx_msg void	OnBnClickedResetPlaylist();
 	afx_msg void	OnBnClickedLoopCheck();
 	afx_msg void	OnBnClickedAutoplayCheck();
@@ -101,7 +102,7 @@ private:
 	//
 	MSG							msg;
 	HACCEL						m_hAccelTable;
-	CButton						m_playPauseButton;
+	CButton						m_playButton;
 	CButton						m_playNextButton;
 	CButton						m_openFileButton;
 	CButton						m_deleteFileButton;
@@ -113,6 +114,7 @@ private:
 	CButton						m_aboutButton;
 	CButton						m_fileCapture;
 	CButton						m_stopButton;
+	CButton						m_pauseButton;
 	CComboBox					m_deviceListCombo;
 	CListBox					m_playlist;
 	CEdit						m_videoFormatEdit;
@@ -172,4 +174,6 @@ public:
 	afx_msg void OnBnClickedFileCapture();
 	afx_msg void OnBnClickedPrevButton();
 	afx_msg void OnEnChangeAudioBd();
+	afx_msg void OnBnClickedStopButton();
+	afx_msg void OnBnClickedPauseButton();
 };
