@@ -213,6 +213,7 @@ void CFilePlaybackDlg::videoresCombo() {
 	m_videoresCombo.AddString(_T("1080p 60fps"));
 	m_videoresCombo.AddString(_T("1080p 30fps"));
 	m_videoresCombo.AddString(_T("720p 60fps"));
+	m_videoresCombo.AddString(_T("Safest"));
 }
 
 void CFilePlaybackDlg::UpdateInterface()
@@ -860,8 +861,9 @@ BMDDisplayMode CFilePlaybackDlg::LookupDisplayMode(void)
 				else if (videores == _T("720p 60fps")) {
 					bmdDisplayMode = bmdModeHD720p60;
 				}
-				else if (videores == _T("720p 60fps")) {
+				else if (videores == _T("Safest")) {
 					bmdDisplayMode = candidateMode->GetDisplayMode();
+					break;
 				}
 			}
 			else {
@@ -1173,7 +1175,9 @@ void CFilePlaybackDlg::OnCbnSelchangeVideoResCombo()
 					else if (videores == _T("720p 60fps")) {
 						bmdDisplayMode = bmdModeHD720p60;
 					}
-					else {
+					else if (videores == _T("Safest")) {
+						DisableVideoOutput();
+						EnableVideoOutput();
 					}
 			}
 		DisableVideoOutput();
