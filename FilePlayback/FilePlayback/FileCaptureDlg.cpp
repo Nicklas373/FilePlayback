@@ -69,7 +69,7 @@ void CFileCaptureDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_INPUT_MODE_COMBO, m_modeListCombo);
 	DDX_Control(pDX, IDC_AUTODETECT_FORMAT_CHECK, m_applyDetectedInputModeCheckbox);
 	DDX_Control(pDX, IDC_RECORD_BUTTON, m_recordButton);
-	DDX_Control(pDX, IDC_PREVIEW_BOX, m_previewBox_fc);
+	DDX_Control(pDX, IDC_PREVIEW_BOX_FC, m_previewBox_fc);
 }
 
 BEGIN_MESSAGE_MAP(CFileCaptureDlg, CDialog)
@@ -652,7 +652,7 @@ BOOL	CFileCaptureDlg::OnInitDialog()
 
 	// Create and initialise preview, profile callback and DeckLink device discovery objects 
 	m_previewWindow_fc.Attach(new PreviewWindow());
-	if (!m_previewWindow_fc || !m_previewWindow_fc->Initialize(&m_previewBox_fc))
+	if (m_previewWindow_fc->Initialize(&m_previewBox_fc) == false)
 	{
 		ShowErrorMessage(_T("This application was unable to initialise the preview window"), _T("Error"));
 		goto bail;

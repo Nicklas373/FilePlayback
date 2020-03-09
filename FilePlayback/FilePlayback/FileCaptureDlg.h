@@ -145,4 +145,7 @@ private:
 	UINT								m_frameCount;
 	std::atomic<CaptureState>			m_captureState;
 	TCHAR								m_tempFileName[MAX_PATH];
+
+public:
+	afx_msg void OnStnClickedPreviewBox();
 };

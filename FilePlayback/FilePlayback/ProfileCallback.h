@@ -1,5 +1,5 @@
 /* -LICENSE-START-
-** Copyright (c) 2018 Blackmagic Design
+** Copyright (c) 2019 Blackmagic Design
 **
 ** Permission is hereby granted, free of charge, to any person or organization
 ** obtaining a copy of the software and accompanying documentation covered by
@@ -24,6 +24,9 @@
 ** DEALINGS IN THE SOFTWARE.
 ** -LICENSE-END-
 */
+// ProfileCallback.h : header file
+// DeckLink Device Profile Callback
+//
 
 #pragma once
 
@@ -39,17 +42,17 @@ public:
 	ProfileCallback();
 	virtual ~ProfileCallback() {}
 
-	void						OnHaltStreams(const Callback& callback) { m_haltStreamsCallback = callback; }
-	void						OnProfileActivated(const Callback& callback) { m_profileActivatedCallback = callback; };
+	void	OnHaltStreams(const Callback& callback) { m_haltStreamsCallback = callback; }
+	void	OnProfileActivated(const Callback& callback) { m_profileActivatedCallback = callback; };
 
 	// IDeckLinkProfileCallback interface
-	virtual HRESULT	__stdcall	ProfileChanging(IDeckLinkProfile *profileToBeActivated, BOOL streamsWillBeForcedToStop) override;
-	virtual HRESULT	__stdcall	ProfileActivated(IDeckLinkProfile *activatedProfile) override;
+	virtual HRESULT	__stdcall ProfileChanging(IDeckLinkProfile* profileToBeActivated, BOOL streamsWillBeForcedToStop) override;
+	virtual HRESULT	__stdcall ProfileActivated(IDeckLinkProfile* activatedProfile) override;
 
 	// IUnknown needs only a dummy implementation
-	virtual HRESULT	__stdcall	QueryInterface(REFIID iid, LPVOID *ppv) override;
-	virtual ULONG	__stdcall	AddRef() override;
-	virtual ULONG	__stdcall	Release() override;
+	virtual HRESULT	__stdcall QueryInterface(REFIID iid, LPVOID* ppv) override;
+	virtual ULONG	__stdcall AddRef() override;
+	virtual ULONG	__stdcall Release() override;
 
 private:
 	std::atomic<ULONG>		m_refCount;

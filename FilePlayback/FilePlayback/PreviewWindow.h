@@ -28,6 +28,7 @@
 #pragma once
 
 #include <atomic>
+#include <stdint.h>
 #include "D3D9.h"
 #include "DeckLinkAPI_h.h"
 
@@ -41,16 +42,15 @@ public:
 	bool								Initialize(CStatic* previewBox);
 	void								Render(void);
 
-	// IUnknown only needs a dummy implementation
-	virtual HRESULT STDMETHODCALLTYPE	QueryInterface(REFIID iid, LPVOID *ppv);
-	virtual ULONG	STDMETHODCALLTYPE	AddRef();
-	virtual ULONG	STDMETHODCALLTYPE	Release();
+	virtual HRESULT __stdcall	QueryInterface(REFIID iid, LPVOID* ppv) override;
+	virtual ULONG	__stdcall	AddRef() override;
+	virtual ULONG	__stdcall	Release() override;
 
 	// IDeckLinkScreenPreviewCallback
-	virtual HRESULT STDMETHODCALLTYPE	DrawFrame(IDeckLinkVideoFrame* theFrame);
+	virtual HRESULT __stdcall	DrawFrame(IDeckLinkVideoFrame* theFrame) override;
 
 private:
-	std::atomic<ULONG>							m_refCount;
+	std::atomic<uint32_t>						m_refCount;
 	CComPtr<IDeckLinkDX9ScreenPreviewHelper>	m_deckLinkScreenPreviewHelper;
 	CStatic*									m_previewBox;
 	CComPtr<IDirect3D9>							m_dx3D;

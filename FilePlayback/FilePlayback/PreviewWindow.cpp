@@ -118,8 +118,11 @@ ULONG		PreviewWindow::Release()
 
 HRESULT			PreviewWindow::DrawFrame(IDeckLinkVideoFrame* theFrame)
 {
+	if (!theFrame)
+		return E_INVALIDARG;
+
 	// Set current frame in preview helper
-	m_deckLinkScreenPreviewHelper->SetFrame(theFrame);
+	HRESULT hr = m_deckLinkScreenPreviewHelper->SetFrame(theFrame);
 
 	// Then draw the frame to the scene
 	Render();

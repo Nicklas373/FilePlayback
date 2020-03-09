@@ -1,5 +1,5 @@
 /* -LICENSE-START-
-** Copyright (c) 2018 Blackmagic Design
+** Copyright (c) 2019 Blackmagic Design
 **
 ** Permission is hereby granted, free of charge, to any person or organization
 ** obtaining a copy of the software and accompanying documentation covered by
@@ -24,6 +24,9 @@
 ** DEALINGS IN THE SOFTWARE.
 ** -LICENSE-END-
 */
+// ProfileCallback.cpp : implementation file
+// DeckLink Device Profile Callback
+//
 
 #include "stdafx.h"
 #include "ProfileCallback.h"
