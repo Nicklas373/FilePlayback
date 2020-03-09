@@ -74,7 +74,6 @@ public:
 	afx_msg void	OnBnClickedOpenFile();
 	afx_msg void	OnBnClickedDeleteFile();
 	afx_msg void	OnBnClickedNextFile();
-	afx_msg void	OnBnClickedPrevFile();
 	afx_msg void	OnLbnDblclkPlay();
 	afx_msg void	OnLbcRTclkPlay();
 	afx_msg void	OnBnClickedResetPlaylist();
@@ -116,6 +115,7 @@ private:
 	CButton						m_stopButton;
 	CButton						m_pauseButton;
 	CComboBox					m_deviceListCombo;
+	CComboBox					m_videoresCombo;
 	CListBox					m_playlist;
 	CEdit						m_videoFormatEdit;
 	CEdit						m_audioChannelEdit;
@@ -157,6 +157,7 @@ private:
 	void			StopScheduledPlayback(void);
 	void			EndOfStreamSelection(void);
 	void			SeekPosition(void);
+	void			videoresCombo(void);
 	BMDDisplayMode	LookupDisplayMode(void);
 
 	void			AddDevice(CComPtr<IDeckLink> deckLink);
@@ -176,4 +177,5 @@ public:
 	afx_msg void OnEnChangeAudioBd();
 	afx_msg void OnBnClickedStopButton();
 	afx_msg void OnBnClickedPauseButton();
+	afx_msg void OnCbnSelchangeVideoResCombo();
 };

@@ -98,6 +98,7 @@ void CFilePlaybackDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_FILE_CAPTURE, m_fileCapture);
 	DDX_Control(pDX, IDC_STOP_BUTTON, m_stopButton);
 	DDX_Control(pDX, IDC_PAUSE_BUTTON, m_pauseButton);
+	DDX_Control(pDX, IDC_VIDEO_RES_COMBO, m_videoresCombo);
 	DDX_Check(pDX, IDC_LOOP, m_loopCheck);
 	DDX_Check(pDX, IDC_AUTOPLAY_CHECK, m_autoplayCheck);
 }
@@ -135,6 +136,7 @@ BEGIN_MESSAGE_MAP(CFilePlaybackDlg, CDialog)
 	ON_EN_CHANGE(IDC_AUDIO_BD, &CFilePlaybackDlg::OnEnChangeAudioBd)
 	ON_BN_CLICKED(IDC_STOP_BUTTON, &CFilePlaybackDlg::OnBnClickedStopButton)
 	ON_BN_CLICKED(IDC_PAUSE_BUTTON, &CFilePlaybackDlg::OnBnClickedPauseButton)
+	ON_CBN_SELCHANGE(IDC_VIDEO_RES_COMBO, &CFilePlaybackDlg::OnCbnSelchangeVideoResCombo)
 END_MESSAGE_MAP()
 
 // CFilePlaybackDlg message handlers
@@ -155,6 +157,7 @@ BOOL CFilePlaybackDlg::OnInitDialog()
 	m_filePositionEdit.SetWindowTextW(SecondsToHMS(0));
 	m_fileDurationEdit.SetWindowTextW(SecondsToHMS(0));
 	UpdateInterface();
+	videoresCombo();
 
 	if (MFStartup(MF_VERSION) != S_OK)
 	{
@@ -204,6 +207,12 @@ BOOL CFilePlaybackDlg::OnInitDialog()
 
 bail:
 	return TRUE;  // return TRUE  unless you set the focus to a control
+}
+
+void CFilePlaybackDlg::videoresCombo() {
+	m_videoresCombo.AddString(_T("1080p 60fps"));
+	m_videoresCombo.AddString(_T("1080p 30fps"));
+	m_videoresCombo.AddString(_T("720p 60fps"));
 }
 
 void CFilePlaybackDlg::UpdateInterface()
@@ -444,17 +453,17 @@ void CFilePlaybackDlg::OnBnClickedOpenFile()
 
 	const COMDLG_FILTERSPEC filterSpec[] =
 	{
-		{ L"Movie Files", L"*.mp4;*.mov" },
+		{ L"Movie Files", L"*.mp4;*.mov;" },
 		{ L"All files", L"*.*" }
 	};
 
 	if (m_selectedDevice && (m_playbackState == PlaybackState::OutputEnabled))
 	{
 		// Already existing output file, reset source reader and disable output
-		//m_sourceReader->Uninitialize();
+		// m_sourceReader->Uninitialize();
 
-		//m_selectedDevice->DisableOutput();
-		//m_playbackState = PlaybackState::OutputDisabled;
+		// m_selectedDevice->DisableOutput();
+		// m_playbackState = PlaybackState::OutputDisabled;
 		StopScheduledPlayback();
 	}
 
@@ -795,7 +804,8 @@ void	CFilePlaybackDlg::SeekPosition()
 
 BMDDisplayMode CFilePlaybackDlg::LookupDisplayMode(void)
 {
-	BMDDisplayMode								bmdDisplayMode = bmdModeUnknown;
+	BMDDisplayMode	bmdDisplayMode = bmdModeUnknown;
+
 	std::vector<CComPtr<IDeckLinkDisplayMode>>	candidateModes;
 	float										frameRate = m_sourceReader->GetVideoFrameRate();
 
@@ -835,8 +845,28 @@ BMDDisplayMode CFilePlaybackDlg::LookupDisplayMode(void)
 		if (candidateMode->GetWidth() >= m_sourceReader->GetVideoFrameWidth() &&
 			candidateMode->GetHeight() >= m_sourceReader->GetVideoFrameHeight())
 		{
-			bmdDisplayMode = candidateMode->GetDisplayMode();
-			break;
+			CString videores;
+			int index = m_videoresCombo.GetCurSel();
+			if (index != CB_ERR)
+			{
+				this->m_videoresCombo.GetLBText(index, videores);
+
+				if (videores == _T("1080p 60fps")) {
+					bmdDisplayMode = bmdModeHD1080p5994;
+				}
+				else if (videores == _T("1080p 30fps")) {
+					bmdDisplayMode = bmdModeHD1080p30;
+				}
+				else if (videores == _T("720p 60fps")) {
+					bmdDisplayMode = bmdModeHD720p60;
+				}
+				else {
+					AfxMessageBox(_T("Select correct resolution !"));
+				}
+			}
+			else {
+				bmdDisplayMode = candidateMode->GetDisplayMode();
+			}
 		}
 	}
 	return bmdDisplayMode;
@@ -1118,4 +1148,37 @@ void CFilePlaybackDlg::OnBnClickedFileCapture()
 {
 	CFileCaptureDlg dlg;
 	dlg.DoModal();
+}
+
+void CFilePlaybackDlg::OnCbnSelchangeVideoResCombo()
+{
+	BMDDisplayMode	bmdDisplayMode = bmdModeUnknown;
+	std::vector<CComPtr<IDeckLinkDisplayMode>>	candidateModes;
+
+	if (m_playbackState == PlaybackState::OutputEnabled) {
+		CString videores;
+			int index = m_videoresCombo.GetCurSel();
+			if (index != CB_ERR)
+			{
+				this->m_videoresCombo.GetLBText(index, videores);
+
+					if (videores == _T("1080p 60fps")) {
+						bmdDisplayMode = bmdModeHD1080p5994;
+					}
+					else if (videores == _T("1080p 30fps")) {
+						bmdDisplayMode = bmdModeHD1080p30;
+					}
+					else if (videores == _T("720p 60fps")) {
+						bmdDisplayMode = bmdModeHD720p60;
+					}
+					else {
+						AfxMessageBox(_T("Select correct resolution !"));
+					}
+			}
+			else {
+			
+			}
+		DisableVideoOutput();
+		EnableVideoOutput();
+	}
 }

@@ -6,7 +6,7 @@
 
 
  /* File created by MIDL compiler version 8.01.0622 */
-/* at Mon Jan 18 19:14:07 2038
+/* at Tue Jan 19 10:14:07 2038
  */
 /* Compiler settings for ..\..\include\DeckLinkAPI.idl:
     Oicf, W1, Zp8, env=Win32 (32b run), target_arch=X86 8.01.0622 

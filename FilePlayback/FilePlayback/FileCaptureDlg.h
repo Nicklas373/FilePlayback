@@ -127,7 +127,7 @@ protected:
 private:
 	void					UpdateStatusBar(UINT frameCount);
 
-	CCriticalSection					m_critSec; // to synchronise access to the above structures
+	//CCriticalSection					m_critSec; // to synchronise access to the above structures
 	CComPtr<DeckLinkInputDevice>		m_selectedDevice;
 	BMDVideoConnection					m_selectedInputConnection;
 	CComPtr<DeckLinkDeviceDiscovery>	m_deckLinkDiscovery;
