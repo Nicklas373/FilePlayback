@@ -860,12 +860,13 @@ BMDDisplayMode CFilePlaybackDlg::LookupDisplayMode(void)
 				else if (videores == _T("720p 60fps")) {
 					bmdDisplayMode = bmdModeHD720p60;
 				}
-				else {
-					AfxMessageBox(_T("Select correct resolution !"));
+				else if (videores == _T("720p 60fps")) {
+					bmdDisplayMode = candidateMode->GetDisplayMode();
 				}
 			}
 			else {
 				bmdDisplayMode = candidateMode->GetDisplayMode();
+				break;
 			}
 		}
 	}
@@ -1154,6 +1155,7 @@ void CFilePlaybackDlg::OnCbnSelchangeVideoResCombo()
 {
 	BMDDisplayMode	bmdDisplayMode = bmdModeUnknown;
 	std::vector<CComPtr<IDeckLinkDisplayMode>>	candidateModes;
+	float	frameRate = m_sourceReader->GetVideoFrameRate();
 
 	if (m_playbackState == PlaybackState::OutputEnabled) {
 		CString videores;
@@ -1172,11 +1174,7 @@ void CFilePlaybackDlg::OnCbnSelchangeVideoResCombo()
 						bmdDisplayMode = bmdModeHD720p60;
 					}
 					else {
-						AfxMessageBox(_T("Select correct resolution !"));
 					}
-			}
-			else {
-			
 			}
 		DisableVideoOutput();
 		EnableVideoOutput();
