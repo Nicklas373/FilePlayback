@@ -34,17 +34,17 @@
 
 class DeckLinkDeviceDiscovery : public IDeckLinkDeviceNotificationCallback
 {
+public:
 	using Callback = std::function<void(CComPtr<IDeckLink>&)>;
 
-public:
 	DeckLinkDeviceDiscovery();
-	virtual ~DeckLinkDeviceDiscovery();
+	~DeckLinkDeviceDiscovery();
 
 	void						OnDeviceArrival(const Callback& callback) { m_deckLinkArrivedCallback = callback; }
 	void						OnDeviceRemoval(const Callback& callback) { m_deckLinkRemovedCallback = callback; };
 
-	bool				        Enable();
-	void				        Disable();
+	bool						Enable();
+	void						Disable();
 
 	// IDeckLinkDeviceArrivalNotificationCallback interface
 	virtual HRESULT	__stdcall	DeckLinkDeviceArrived(IDeckLink* deckLinkDevice) override;
@@ -56,10 +56,10 @@ public:
 	virtual ULONG	__stdcall	Release() override;
 
 private:
-	CComPtr<IDeckLinkDiscovery>		m_deckLinkDiscovery;
+	CComPtr<IDeckLinkDiscovery>	m_deckLinkDiscovery;
 
-	Callback						m_deckLinkArrivedCallback;
-	Callback						m_deckLinkRemovedCallback;
+	Callback					m_deckLinkArrivedCallback;
+	Callback					m_deckLinkRemovedCallback;
 
-	std::atomic<ULONG>				m_refCount;
+	std::atomic<ULONG>			m_refCount;
 };

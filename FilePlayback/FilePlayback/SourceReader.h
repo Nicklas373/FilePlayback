@@ -32,13 +32,13 @@
 #include <condition_variable>
 #include <mutex>
 #include <queue>
-#include <functional>
 #include "mfidl.h"
 #include "mfreadwrite.h"
 
 #include "PlaybackAudioPacket.h"
 #include "PlaybackVideoFrame.h"
 #include "DeckLinkAPI_h.h"
+#include <functional>
 
 static const BMDTimeScale kMFTimescale = 10 * 1000 * 1000;
 

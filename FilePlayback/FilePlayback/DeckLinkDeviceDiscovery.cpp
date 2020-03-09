@@ -1,5 +1,5 @@
 /* -LICENSE-START-
-** Copyright (c) 2018 Blackmagic Design
+** Copyright (c) 2019 Blackmagic Design
 **
 ** Permission is hereby granted, free of charge, to any person or organization
 ** obtaining a copy of the software and accompanying documentation covered by
@@ -42,9 +42,9 @@ DeckLinkDeviceDiscovery::~DeckLinkDeviceDiscovery()
 	Disable();
 }
 
-bool DeckLinkDeviceDiscovery::Enable()
+bool        DeckLinkDeviceDiscovery::Enable()
 {
-	HRESULT result = E_FAIL;
+	HRESULT     result = E_FAIL;
 
 	// Install device arrival notifications
 	if (m_deckLinkDiscovery != nullptr)
@@ -53,14 +53,14 @@ bool DeckLinkDeviceDiscovery::Enable()
 	return result == S_OK;
 }
 
-void DeckLinkDeviceDiscovery::Disable()
+void        DeckLinkDeviceDiscovery::Disable()
 {
 	// Uninstall device arrival notifications
 	if (m_deckLinkDiscovery != nullptr)
 		m_deckLinkDiscovery->UninstallDeviceNotifications();
 }
 
-HRESULT DeckLinkDeviceDiscovery::DeckLinkDeviceArrived(IDeckLink* deckLink)
+HRESULT     DeckLinkDeviceDiscovery::DeckLinkDeviceArrived(IDeckLink* deckLink)
 {
 	CComPtr<IDeckLink> deckLinkDevice = deckLink;
 	m_deckLinkArrivedCallback(deckLinkDevice);
@@ -68,7 +68,7 @@ HRESULT DeckLinkDeviceDiscovery::DeckLinkDeviceArrived(IDeckLink* deckLink)
 	return S_OK;
 }
 
-HRESULT DeckLinkDeviceDiscovery::DeckLinkDeviceRemoved(IDeckLink* deckLink)
+HRESULT     DeckLinkDeviceDiscovery::DeckLinkDeviceRemoved(IDeckLink* deckLink)
 {
 	CComPtr<IDeckLink> deckLinkDevice = deckLink;
 	m_deckLinkRemovedCallback(deckLinkDevice);
@@ -76,9 +76,9 @@ HRESULT DeckLinkDeviceDiscovery::DeckLinkDeviceRemoved(IDeckLink* deckLink)
 	return S_OK;
 }
 
-HRESULT	DeckLinkDeviceDiscovery::QueryInterface(REFIID iid, LPVOID *ppv)
+HRESULT	STDMETHODCALLTYPE DeckLinkDeviceDiscovery::QueryInterface(REFIID iid, LPVOID *ppv)
 {
-	HRESULT			result = E_NOINTERFACE;
+	HRESULT result = E_NOINTERFACE;
 
 	if (ppv == nullptr)
 		return E_INVALIDARG;
@@ -103,12 +103,12 @@ HRESULT	DeckLinkDeviceDiscovery::QueryInterface(REFIID iid, LPVOID *ppv)
 	return result;
 }
 
-ULONG DeckLinkDeviceDiscovery::AddRef(void)
+ULONG STDMETHODCALLTYPE DeckLinkDeviceDiscovery::AddRef(void)
 {
 	return ++m_refCount;
 }
 
-ULONG DeckLinkDeviceDiscovery::Release(void)
+ULONG STDMETHODCALLTYPE DeckLinkDeviceDiscovery::Release(void)
 {
 	ULONG newRefValue = --m_refCount;
 	if (newRefValue == 0)

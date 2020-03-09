@@ -31,7 +31,6 @@
 #include <condition_variable>
 #include <functional>
 #include <mutex>
-#include "FilePlaybackDlg.h"
 #include "PlaybackVideoFrame.h"
 #include "PlaybackAudioPacket.h"
 #include "SourceReader.h"

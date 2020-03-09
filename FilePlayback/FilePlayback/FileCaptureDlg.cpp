@@ -34,6 +34,8 @@
 #include "FileCapture.h"
 #include "FileCaptureDlg.h"
 
+
+
 static const std::list<std::pair<BMDVideoConnection, CString>> kInputConnections =
 {
 	{ bmdVideoConnectionSDI,		_T("SDI") },
@@ -49,7 +51,6 @@ static const UINT kStatusBarIndicators[] =
 	ID_SEPARATOR
 };
 
-// This is fixed (static) values to get 16 bit 48Khz output
 static const BMDAudioSampleType		kAudioSampleDepth	= bmdAudioSampleType16bitInteger;
 static const uint32_t				kAudioChannelCount	= 2;
 
@@ -68,7 +69,7 @@ void CFileCaptureDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_INPUT_MODE_COMBO, m_modeListCombo);
 	DDX_Control(pDX, IDC_AUTODETECT_FORMAT_CHECK, m_applyDetectedInputModeCheckbox);
 	DDX_Control(pDX, IDC_RECORD_BUTTON, m_recordButton);
-	DDX_Control(pDX, IDC_PREVIEW_BOX_FC, m_previewBox_fc);
+	DDX_Control(pDX, IDC_PREVIEW_BOX, m_previewBox_fc);
 }
 
 BEGIN_MESSAGE_MAP(CFileCaptureDlg, CDialog)
@@ -93,7 +94,6 @@ BEGIN_MESSAGE_MAP(CFileCaptureDlg, CDialog)
 	ON_MESSAGE(WM_SIGNAL_VALID_MESSAGE, &CFileCaptureDlg::OnSignalValid)
 	ON_MESSAGE(WM_SIGNAL_INVALID_MESSAGE, &CFileCaptureDlg::OnSignalInvalid)
 
-	//ON_STN_CLICKED(IDC_PREVIEW_BOX_FC, &CFileCaptureDlg::OnStnClickedPreviewBox)
 END_MESSAGE_MAP()
 
 void CFileCaptureDlg::OnRecordBnClicked()
@@ -364,7 +364,7 @@ void CFileCaptureDlg::RefreshVideoModeList()
 		BOOL	supported;
 
 		// Check that display mode is supported with the active profile
-		hr = m_selectedDevice->GetDeckLinkInput()->DoesSupportVideoMode(m_selectedInputConnection, deckLinkDisplayMode->GetDisplayMode(), bmdFormatUnspecified, bmdSupportedVideoModeDefault, &supported);
+		hr = m_selectedDevice->GetDeckLinkInput()->DoesSupportVideoMode(m_selectedInputConnection, deckLinkDisplayMode->GetDisplayMode(), bmdFormatUnspecified, bmdNoVideoInputConversion, bmdSupportedVideoModeDefault, NULL, &supported);
 		if (hr != S_OK || !supported)
 		{
 			deckLinkDisplayMode.Release();
@@ -650,9 +650,9 @@ BOOL	CFileCaptureDlg::OnInitDialog()
 	m_videoSampleQueue.Attach(new SampleMemoryAllocator());
 	m_audioSampleQueue.Attach(new AudioSampleQueue(kAudioChannelCount, kAudioSampleDepth));
 
-	// Create and initialize preview helper
+	// Create and initialise preview, profile callback and DeckLink device discovery objects 
 	m_previewWindow_fc.Attach(new PreviewWindow());
-	if (m_previewWindow_fc->Initialize(&m_previewBox_fc) == false)
+	if (!m_previewWindow_fc || !m_previewWindow_fc->Initialize(&m_previewBox_fc))
 	{
 		ShowErrorMessage(_T("This application was unable to initialise the preview window"), _T("Error"));
 		goto bail;
@@ -909,3 +909,4 @@ HCURSOR CFileCaptureDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
+

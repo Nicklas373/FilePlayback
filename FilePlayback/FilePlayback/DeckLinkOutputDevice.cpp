@@ -32,8 +32,6 @@
 #include "PlaybackVideoFrame.h"
 #include "PlaybackAudioPacket.h"
 #include "DeckLinkOutputDevice.h"
-#include "FilePlaybackDlg.h"
-
 
 static const BMDPixelFormat kConvertedPixelFormat = bmdFormat10BitYUV;
 
@@ -176,8 +174,6 @@ HRESULT	DeckLinkOutputDevice::ScheduledPlaybackHasStopped()
 	// Notify subscribers that playback has stopped, so it can disable output
 	if (m_scheduledPlaybackStoppedCallback != nullptr)
 		m_scheduledPlaybackStoppedCallback(m_endOfStream);
-	
-	//apply "loop" and "autoplay" condition here
 
 	return S_OK;
 }
@@ -280,11 +276,11 @@ bool DeckLinkOutputDevice::EnableOutput(BMDDisplayMode displayMode, BMDPixelForm
 	CComPtr<IDeckLinkDisplayMode>	deckLinkDisplayMode;
 	BOOL							displayModeSupported;
 
-	if ((m_deckLinkOutput->DoesSupportVideoMode(bmdVideoConnectionUnspecified, displayMode, pixelFormat, bmdSupportedVideoModeDefault, nullptr, &displayModeSupported) != S_OK) ||
+	if ((m_deckLinkOutput->DoesSupportVideoMode(bmdVideoConnectionUnspecified, displayMode, pixelFormat, bmdNoVideoOutputConversion, bmdSupportedVideoModeDefault, nullptr, &displayModeSupported) != S_OK) ||
 		!displayModeSupported)
 	{
 		// Video mode is unsupported, check whether we can support with format conversion
-		if ((m_deckLinkOutput->DoesSupportVideoMode(bmdVideoConnectionUnspecified, displayMode, kConvertedPixelFormat, bmdSupportedVideoModeDefault, nullptr, &displayModeSupported) != S_OK) ||
+		if ((m_deckLinkOutput->DoesSupportVideoMode(bmdVideoConnectionUnspecified, displayMode, kConvertedPixelFormat, bmdNoVideoOutputConversion, bmdSupportedVideoModeDefault, nullptr, &displayModeSupported) != S_OK) ||
 			!displayModeSupported)
 			return false;
 
@@ -383,10 +379,7 @@ bool DeckLinkOutputDevice::DisplayPreviewFrame(CComPtr<PlaybackVideoFrame>& vide
 	m_endOfStream = endOfStream;
 
 	if (m_endOfStream)
-	{
 		return false;
-	}
-		
 
 	// Get stream time so we start playback from correct scheduled time
 	m_scheduledStartTime = videoFrame->GetStreamTime(m_frameTimescale);
@@ -422,20 +415,12 @@ bool DeckLinkOutputDevice::ScheduleNextVideoFrame(CComPtr<PlaybackVideoFrame>& v
 	m_endOfStream = endOfStream;
 
 	if (endOfStream || (videoFrame == nullptr))
-	{
-		//StopScheduledPlayback();
-		CFilePlaybackDlg Cfile;
-		Cfile.LoopCheck();
-		//AfxMessageBox(_T("end3"));
 		return false;
-	}
 
 	streamTime = videoFrame->GetStreamTime(m_frameTimescale);
 
 	if (!GetOutputVideoFrame(videoFrame, &outputVideoFrame))
-	{
 		return false;
-	}
 
 	if (m_deckLinkOutput->ScheduleVideoFrame(outputVideoFrame, streamTime, m_frameDuration, m_frameTimescale) == S_OK)
 	{
@@ -452,9 +437,7 @@ bool DeckLinkOutputDevice::ScheduleNextAudioPacket(CComPtr<PlaybackAudioPacket>&
 	void* audioBuffer;
 
 	if (endOfStream || (audioPacket == nullptr))
-	{
 		return false;
-	}
 
 	if (audioPacket->GetBytes(&audioBuffer) != S_OK)
 		return false;
