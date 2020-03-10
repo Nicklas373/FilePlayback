@@ -38,8 +38,8 @@ DEFINE_GUID(CLSID_VideoProcessorMFT, 0x88753b26, 0x5b24, 0x49bd, 0xb2, 0xe7, 0xc
 
 static const int kSampleQueueWaterlevel = 3;
 
-// Audio Configuration - fix to 48kHz PCM, 2-channel, 16-bit samples
-static const uint32_t			kAudioChannelCount	= 2;
+// Audio Configuration - default to 2-channel, 16-bit samples
+uint32_t			kAudioChannelCount	= 2;
 BMDAudioSampleType	kAudioBitsPerSample	= bmdAudioSampleType16bitInteger;
 
 // Video pixel format - fix to v210
