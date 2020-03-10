@@ -43,14 +43,15 @@
 #define IDC_STOP_BUTTON                 1046
 #define IDC_PAUSE_BUTTON                1047
 #define IDC_VIDEO_RES_COMBO             1049
+#define IDC_AUDIO_DEPTH_COMBO           1050
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        145
+#define _APS_NEXT_RESOURCE_VALUE        146
 #define _APS_NEXT_COMMAND_VALUE         32782
-#define _APS_NEXT_CONTROL_VALUE         1050
+#define _APS_NEXT_CONTROL_VALUE         1051
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

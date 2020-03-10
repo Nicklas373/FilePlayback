@@ -1632,6 +1632,7 @@ typedef /* [v1_enum] */
 enum _BMDAudioSampleType
     {
         bmdAudioSampleType16bitInteger	= 16,
+        bmdAudioSampleType24bitInteger	= 24,
         bmdAudioSampleType32bitInteger	= 32
     } 	BMDAudioSampleType;
 

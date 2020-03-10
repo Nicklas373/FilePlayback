@@ -37,9 +37,9 @@
 #include "FileCapture.h"
 #include "FileCaptureDlg.h"
 
-// This is fixed (static) values to get 16 bit 48Khz output
-static const BMDAudioSampleType	kAudioSampleType = bmdAudioSampleType16bitInteger;
+// This is fixed (static) values to get 2 channel output
 static const uint32_t			kAudioChannelCount = 2;
+BMDAudioSampleType	kAudioSampleType = bmdAudioSampleType16bitInteger;
 
 // Declare Filename as null and slider range value
 CString							currentFilename = NULL;
@@ -99,6 +99,7 @@ void CFilePlaybackDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STOP_BUTTON, m_stopButton);
 	DDX_Control(pDX, IDC_PAUSE_BUTTON, m_pauseButton);
 	DDX_Control(pDX, IDC_VIDEO_RES_COMBO, m_videoresCombo);
+	DDX_Control(pDX, IDC_AUDIO_DEPTH_COMBO, m_audiodepthCombo);
 	DDX_Check(pDX, IDC_LOOP, m_loopCheck);
 	DDX_Check(pDX, IDC_AUTOPLAY_CHECK, m_autoplayCheck);
 }
@@ -137,6 +138,7 @@ BEGIN_MESSAGE_MAP(CFilePlaybackDlg, CDialog)
 	ON_BN_CLICKED(IDC_STOP_BUTTON, &CFilePlaybackDlg::OnBnClickedStopButton)
 	ON_BN_CLICKED(IDC_PAUSE_BUTTON, &CFilePlaybackDlg::OnBnClickedPauseButton)
 	ON_CBN_SELCHANGE(IDC_VIDEO_RES_COMBO, &CFilePlaybackDlg::OnCbnSelchangeVideoResCombo)
+	ON_CBN_SELCHANGE(IDC_AUDIO_DEPTH_COMBO, &CFilePlaybackDlg::OnCbnSelchangeAudioDepthCombo)
 END_MESSAGE_MAP()
 
 // CFilePlaybackDlg message handlers
@@ -158,6 +160,7 @@ BOOL CFilePlaybackDlg::OnInitDialog()
 	m_fileDurationEdit.SetWindowTextW(SecondsToHMS(0));
 	UpdateInterface();
 	videoresCombo();
+	audiodepthCombo();
 
 	if (MFStartup(MF_VERSION) != S_OK)
 	{
@@ -213,7 +216,14 @@ void CFilePlaybackDlg::videoresCombo() {
 	m_videoresCombo.AddString(_T("1080p 60fps"));
 	m_videoresCombo.AddString(_T("1080p 30fps"));
 	m_videoresCombo.AddString(_T("720p 60fps"));
-	m_videoresCombo.AddString(_T("Safest"));
+	m_videoresCombo.AddString(_T("Same as source"));
+}
+
+void CFilePlaybackDlg::audiodepthCombo() {
+	m_audiodepthCombo.AddString(_T("16 bit"));
+	m_audiodepthCombo.AddString(_T("24 bit"));
+	m_audiodepthCombo.AddString(_T("32 bit"));
+	m_audiodepthCombo.AddString(_T("Same as source"));
 }
 
 void CFilePlaybackDlg::UpdateInterface()
@@ -805,6 +815,7 @@ void	CFilePlaybackDlg::SeekPosition()
 
 BMDDisplayMode CFilePlaybackDlg::LookupDisplayMode(void)
 {
+	// Declare default output information as not static output
 	BMDDisplayMode	bmdDisplayMode = bmdModeUnknown;
 
 	std::vector<CComPtr<IDeckLinkDisplayMode>>	candidateModes;
@@ -847,7 +858,10 @@ BMDDisplayMode CFilePlaybackDlg::LookupDisplayMode(void)
 			candidateMode->GetHeight() >= m_sourceReader->GetVideoFrameHeight())
 		{
 			CString videores;
+			CString audiodepth;
 			int index = m_videoresCombo.GetCurSel();
+			int audiodepthCombo2 = m_audiodepthCombo.GetCurSel();
+
 			if (index != CB_ERR)
 			{
 				this->m_videoresCombo.GetLBText(index, videores);
@@ -861,13 +875,35 @@ BMDDisplayMode CFilePlaybackDlg::LookupDisplayMode(void)
 				else if (videores == _T("720p 60fps")) {
 					bmdDisplayMode = bmdModeHD720p60;
 				}
-				else if (videores == _T("Safest")) {
+				else if (videores == _T("Same as source")) {
 					bmdDisplayMode = candidateMode->GetDisplayMode();
 					break;
 				}
 			}
 			else {
 				bmdDisplayMode = candidateMode->GetDisplayMode();
+				break;
+			}
+
+			if (audiodepthCombo2 != CB_ERR)
+			{
+				this->m_videoresCombo.GetLBText(audiodepthCombo2, audiodepth);
+
+				if (videores == _T("16 bit")) {
+					kAudioSampleType = bmdAudioSampleType16bitInteger;
+				}
+				else if (videores == _T("24 bit")) {
+					kAudioSampleType = bmdAudioSampleType24bitInteger;
+				}
+				else if (videores == _T("32 bit")) {
+					kAudioSampleType = bmdAudioSampleType32bitInteger;
+				}
+				else if (videores == _T("Same as source")) {
+					kAudioSampleType = bmdAudioSampleType16bitInteger;
+				}
+			}
+			else {
+				kAudioSampleType = bmdAudioSampleType16bitInteger;
 				break;
 			}
 		}
@@ -911,6 +947,9 @@ LRESULT CFilePlaybackDlg::OnUpdateStreamTime(WPARAM wParam, LPARAM lParam)
 
 LRESULT CFilePlaybackDlg::OnOutputEnabled(WPARAM wParam, LPARAM lParam)
 {
+	static const uint32_t			kAudioChannelCount = 2;
+	static const BMDAudioSampleType	kAudioSampleType = bmdAudioSampleType32bitInteger;
+
 	// Show Declink Output Information
 	CString displayModeName; // Show Full Video Codec Information
 	CString displayAudioChannel; // Show Audio Channel Information
@@ -1175,11 +1214,43 @@ void CFilePlaybackDlg::OnCbnSelchangeVideoResCombo()
 					else if (videores == _T("720p 60fps")) {
 						bmdDisplayMode = bmdModeHD720p60;
 					}
-					else if (videores == _T("Safest")) {
+					else if (videores == _T("Same as source")) {
 						DisableVideoOutput();
 						EnableVideoOutput();
 					}
 			}
+		DisableVideoOutput();
+		EnableVideoOutput();
+	}
+}
+
+void CFilePlaybackDlg::OnCbnSelchangeAudioDepthCombo()
+{
+	BMDAudioSampleType	kAudioSampleType = bmdAudioSampleType16bitInteger;
+	CString audiodepth;
+	int audiodepthCombo2 = m_audiodepthCombo.GetCurSel();
+
+	if (m_playbackState == PlaybackState::OutputEnabled) {
+		if (audiodepthCombo2 != CB_ERR)
+		{
+			this->m_audiodepthCombo.GetLBText(audiodepthCombo2, audiodepth);
+
+			if (audiodepth == _T("16 bit")) {
+				kAudioSampleType = bmdAudioSampleType16bitInteger;
+			}
+			else if (audiodepth == _T("24 bit")) {
+				kAudioSampleType = bmdAudioSampleType24bitInteger;
+			}
+			else if (audiodepth == _T("32 bit")) {
+				kAudioSampleType = bmdAudioSampleType32bitInteger;
+			}
+			else if (audiodepth == _T("Same as source")) {
+				kAudioSampleType = bmdAudioSampleType16bitInteger;
+			}
+		}
+		else {
+			kAudioSampleType = bmdAudioSampleType16bitInteger;
+		}
 		DisableVideoOutput();
 		EnableVideoOutput();
 	}

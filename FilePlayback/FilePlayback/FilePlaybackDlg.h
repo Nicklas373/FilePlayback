@@ -116,6 +116,7 @@ private:
 	CButton						m_pauseButton;
 	CComboBox					m_deviceListCombo;
 	CComboBox					m_videoresCombo;
+	CComboBox					m_audiodepthCombo;
 	CListBox					m_playlist;
 	CEdit						m_videoFormatEdit;
 	CEdit						m_audioChannelEdit;
@@ -158,6 +159,7 @@ private:
 	void			EndOfStreamSelection(void);
 	void			SeekPosition(void);
 	void			videoresCombo(void);
+	void			audiodepthCombo(void);
 	BMDDisplayMode	LookupDisplayMode(void);
 
 	void			AddDevice(CComPtr<IDeckLink> deckLink);
@@ -178,4 +180,5 @@ public:
 	afx_msg void OnBnClickedStopButton();
 	afx_msg void OnBnClickedPauseButton();
 	afx_msg void OnCbnSelchangeVideoResCombo();
+	afx_msg void OnCbnSelchangeAudioDepthCombo();
 };

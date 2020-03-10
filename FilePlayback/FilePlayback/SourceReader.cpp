@@ -40,7 +40,7 @@ static const int kSampleQueueWaterlevel = 3;
 
 // Audio Configuration - fix to 48kHz PCM, 2-channel, 16-bit samples
 static const uint32_t			kAudioChannelCount	= 2;
-static const BMDAudioSampleType	kAudioBitsPerSample	= bmdAudioSampleType16bitInteger;
+BMDAudioSampleType	kAudioBitsPerSample	= bmdAudioSampleType16bitInteger;
 
 // Video pixel format - fix to v210
 static const std::pair<GUID, BMDPixelFormat> kVideoPixelFormat = std::make_pair(MFVideoFormat_RGB32, bmdFormat8BitBGRA);
