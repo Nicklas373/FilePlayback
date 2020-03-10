@@ -887,18 +887,18 @@ BMDDisplayMode CFilePlaybackDlg::LookupDisplayMode(void)
 
 			if (audiodepthCombo2 != CB_ERR)
 			{
-				this->m_videoresCombo.GetLBText(audiodepthCombo2, audiodepth);
+				this->m_audiodepthCombo.GetLBText(audiodepthCombo2, audiodepth);
 
-				if (videores == _T("16 bit")) {
+				if (audiodepth == _T("16 bit")) {
 					kAudioSampleType = bmdAudioSampleType16bitInteger;
 				}
-				else if (videores == _T("24 bit")) {
+				else if (audiodepth == _T("24 bit")) {
 					kAudioSampleType = bmdAudioSampleType24bitInteger;
 				}
-				else if (videores == _T("32 bit")) {
+				else if (audiodepth == _T("32 bit")) {
 					kAudioSampleType = bmdAudioSampleType32bitInteger;
 				}
-				else if (videores == _T("Same as source")) {
+				else if (audiodepth == _T("Same as source")) {
 					kAudioSampleType = bmdAudioSampleType16bitInteger;
 				}
 			}
@@ -947,9 +947,6 @@ LRESULT CFilePlaybackDlg::OnUpdateStreamTime(WPARAM wParam, LPARAM lParam)
 
 LRESULT CFilePlaybackDlg::OnOutputEnabled(WPARAM wParam, LPARAM lParam)
 {
-	static const uint32_t			kAudioChannelCount = 2;
-	static const BMDAudioSampleType	kAudioSampleType = bmdAudioSampleType32bitInteger;
-
 	// Show Declink Output Information
 	CString displayModeName; // Show Full Video Codec Information
 	CString displayAudioChannel; // Show Audio Channel Information
