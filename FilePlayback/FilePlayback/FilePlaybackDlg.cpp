@@ -37,8 +37,8 @@
 #include "FileCapture.h"
 #include "FileCaptureDlg.h"
 
-// This is default values to get 2 channel & 16 bit output
-uint32_t			kAudioChannelCount = 2;
+// This is fixed (static) values to get 2 channel output
+static const uint32_t			kAudioChannelCount = 2;
 BMDAudioSampleType	kAudioSampleType = bmdAudioSampleType16bitInteger;
 
 // Declare Filename as null and slider range value
@@ -882,6 +882,28 @@ BMDDisplayMode CFilePlaybackDlg::LookupDisplayMode(void)
 			}
 			else {
 				bmdDisplayMode = candidateMode->GetDisplayMode();
+				break;
+			}
+
+			if (audiodepthCombo2 != CB_ERR)
+			{
+				this->m_audiodepthCombo.GetLBText(audiodepthCombo2, audiodepth);
+
+				if (audiodepth == _T("16 bit")) {
+					kAudioSampleType = bmdAudioSampleType16bitInteger;
+				}
+				else if (audiodepth == _T("24 bit")) {
+					kAudioSampleType = bmdAudioSampleType24bitInteger;
+				}
+				else if (audiodepth == _T("32 bit")) {
+					kAudioSampleType = bmdAudioSampleType32bitInteger;
+				}
+				else if (audiodepth == _T("Same as source")) {
+					kAudioSampleType = bmdAudioSampleType16bitInteger;
+				}
+			}
+			else {
+				kAudioSampleType = bmdAudioSampleType16bitInteger;
 				break;
 			}
 		}
