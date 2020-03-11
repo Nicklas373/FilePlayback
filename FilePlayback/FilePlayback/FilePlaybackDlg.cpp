@@ -34,6 +34,7 @@
 #include "SourceReader.h"
 #include "windows.h"
 #include "About.h"
+#include <atlcomcli.h>
 #include "FileCapture.h"
 #include "FileCaptureDlg.h"
 
@@ -263,26 +264,28 @@ void CFilePlaybackDlg::OnBnClickedPlay()
 			SeekPosition();
 		}
 		StartScheduledPlayback();
-	}
-	else if (m_playbackState == PlaybackState::ScheduledPlayback)
-		StartScheduledPlayback();
+	} else if (m_playbackState == PlaybackState::ScheduledPlayback)
+		StopScheduledPlayback();
 }
 
 void CFilePlaybackDlg::OnBnClickedStopButton()
 {
-	StopScheduledPlayback();
 	DisableVideoOutput();
 	m_previewWindow.Release();
 	m_filePosition = 0;
 	m_filePositionSlider.SetPos(0);
+	m_filePositionEdit.SetWindowText(SecondsToHMS(m_filePosition / kMFTimescale));
+	SeekPosition();
 	m_openFileButton.EnableWindow(1);
+	UpdateInterface();
 }
 
 void CFilePlaybackDlg::OnBnClickedPauseButton()
 {
 	if (m_playbackState == PlaybackState::ScheduledPlayback)
-		m_playbackState = PlaybackState::ScheduledPlayback;
 		StopScheduledPlayback();
+
+	UpdateInterface();
 }
 
 void CFilePlaybackDlg::OnBnClickedNextFile()
@@ -290,6 +293,7 @@ void CFilePlaybackDlg::OnBnClickedNextFile()
 	// Count currently file on playlist
 	CString str;
 	int total_playlist = m_playlist.GetCount();
+	
 	if (total_playlist <= 1)
 	{
 		str.Format(_T("Total playlist is %d"), total_playlist);
@@ -315,34 +319,23 @@ void CFilePlaybackDlg::OnBnClickedNextFile()
 			// Check decklink status
 			if (m_selectedDevice != nullptr)
 			{
-				// Check playback state
-				if (m_playbackState == PlaybackState::OutputEnabled)
-				{
 					// Stop playback and uninitiliaze it
-					DisableVideoOutput();
-					m_selectedDevice->StopScheduledPlayback();
 					m_sourceReader->Uninitialize();
+					m_selectedDevice->DisableOutput();
+					m_playbackState = PlaybackState::OutputDisabled;
+					StopScheduledPlayback();
 
 					// Reset playback duration
 					m_filePositionSlider.SetPos(0);
 					m_fileDurationEdit.SetWindowTextW(SecondsToHMS(0));
 					m_fileNameEdit.SetWindowTextW(0);
-					m_selectedDevice->DisableOutput();
-					m_playbackState = PlaybackState::OutputDisabled;
-				}
 
-				// Reinitialize playback
-				m_sourceReader->Initialize(CString(nextPath));
-				m_sourceReader->GetFileDuration(&m_fileDuration);
-				m_filePositionSlider.SetPos(0);
-				m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
-				m_fileNameEdit.SetWindowTextW(nextPath);
-				currentFilename = nextPath;
-
-				// Reenable video output if it was disabled
-				if (m_playbackState == PlaybackState::OutputDisabled)
+					m_sourceReader->Initialize(CString(nextPath));
+					m_sourceReader->GetFileDuration(&m_fileDuration);
+					m_filePositionSlider.SetPos(0);
+					m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
+					m_fileNameEdit.SetWindowTextW(nextPath);
 					EnableVideoOutput();
-				UpdateInterface();
 			}
 			else {
 				AfxMessageBox(_T("No Connected Decklink"));
@@ -353,24 +346,6 @@ void CFilePlaybackDlg::OnBnClickedNextFile()
 
 void CFilePlaybackDlg::OnBnClickedPrevButton()
 {
-	// Check if playback already running or no
-	if (m_playbackState == PlaybackState::OutputEnabled)
-	{
-		DisableVideoOutput();
-		if (m_endOfStream)
-		{
-			// If we have previously reached end of stream, then start from beginning
-			m_filePosition = 0;
-			m_filePositionSlider.SetPos(0);
-			m_filePositionEdit.SetWindowText(SecondsToHMS(m_filePosition / kMFTimescale));
-			SeekPosition();
-		}
-		StopScheduledPlayback();
-	}
-
-	if (m_playbackState == PlaybackState::ScheduledPlayback)
-		StopScheduledPlayback();
-
 	// Count total file with current selected file on the playlist
 	// So playlist will stop when reach end of playlist or not selected
 	// In the playlist
@@ -386,7 +361,7 @@ void CFilePlaybackDlg::OnBnClickedPrevButton()
 		AfxMessageBox(str);
 	}
 	else {
-		if (curIndex <= 0) {
+		if (curIndex <= 1) {
 			m_playlist.GetText((curIndex = 0), prevPath);
 			AfxMessageBox(_T("End of playlist !"));
 			AfxMessageBox(_T("Please select file on the playlist"));
@@ -397,34 +372,23 @@ void CFilePlaybackDlg::OnBnClickedPrevButton()
 			// Check decklink status
 			if (m_selectedDevice != nullptr)
 			{
-				// Check playback state
-				if (m_playbackState == PlaybackState::OutputEnabled)
-				{
-					// Stop playback and uninitiliaze it
-					DisableVideoOutput();
-					m_selectedDevice->StopScheduledPlayback();
-					m_sourceReader->Uninitialize();
+				// Stop playback and uninitiliaze it
+				m_sourceReader->Uninitialize();
+				m_selectedDevice->DisableOutput();
+				m_playbackState = PlaybackState::OutputDisabled;
+				StopScheduledPlayback();
 
-					// Reset playback duration
-					m_filePositionSlider.SetPos(0);
-					m_fileDurationEdit.SetWindowTextW(SecondsToHMS(0));
-					m_fileNameEdit.SetWindowTextW(0);
-					m_selectedDevice->DisableOutput();
-					m_playbackState = PlaybackState::OutputDisabled;
-				}
+				// Reset playback duration
+				m_filePositionSlider.SetPos(0);
+				m_fileDurationEdit.SetWindowTextW(SecondsToHMS(0));
+				m_fileNameEdit.SetWindowTextW(0);
 
-				// Reinitialize playback
 				m_sourceReader->Initialize(CString(prevPath));
 				m_sourceReader->GetFileDuration(&m_fileDuration);
 				m_filePositionSlider.SetPos(0);
 				m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
 				m_fileNameEdit.SetWindowTextW(prevPath);
-				currentFilename = prevPath;
-
-				// Reenable video output if it was disabled
-				if (m_playbackState == PlaybackState::OutputDisabled)
-					EnableVideoOutput();
-				UpdateInterface();
+				EnableVideoOutput();
 			}
 			else {
 				AfxMessageBox(_T("No Connected Decklink"));
@@ -471,10 +435,10 @@ void CFilePlaybackDlg::OnBnClickedOpenFile()
 	if (m_selectedDevice && (m_playbackState == PlaybackState::OutputEnabled))
 	{
 		// Already existing output file, reset source reader and disable output
-		// m_sourceReader->Uninitialize();
+		m_sourceReader->Uninitialize();
 
-		// m_selectedDevice->DisableOutput();
-		// m_playbackState = PlaybackState::OutputDisabled;
+		m_selectedDevice->DisableOutput();
+		m_playbackState = PlaybackState::OutputDisabled;
 		StopScheduledPlayback();
 	}
 
