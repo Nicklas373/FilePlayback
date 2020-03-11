@@ -335,6 +335,9 @@ void CFilePlaybackDlg::OnBnClickedNextFile()
 					m_filePositionSlider.SetPos(0);
 					m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
 					m_fileNameEdit.SetWindowTextW(nextPath);
+
+					currentFilename = nextPath;
+
 					EnableVideoOutput();
 			}
 			else {
@@ -361,7 +364,7 @@ void CFilePlaybackDlg::OnBnClickedPrevButton()
 		AfxMessageBox(str);
 	}
 	else {
-		if (curIndex <= 1) {
+		if (curIndex == 0) {
 			m_playlist.GetText((curIndex = 0), prevPath);
 			AfxMessageBox(_T("End of playlist !"));
 			AfxMessageBox(_T("Please select file on the playlist"));
@@ -388,6 +391,9 @@ void CFilePlaybackDlg::OnBnClickedPrevButton()
 				m_filePositionSlider.SetPos(0);
 				m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
 				m_fileNameEdit.SetWindowTextW(prevPath);
+
+				currentFilename = prevPath;
+
 				EnableVideoOutput();
 			}
 			else {
