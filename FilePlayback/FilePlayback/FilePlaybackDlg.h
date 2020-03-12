@@ -159,6 +159,7 @@ private:
 	void			SeekPosition(void);
 	void			videoresCombo(void);
 	void			audiodepthCombo(void);
+	void			StopPlayback(void);
 	BMDDisplayMode	LookupDisplayMode(void);
 
 	void			AddDevice(CComPtr<IDeckLink> deckLink);
