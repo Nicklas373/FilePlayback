@@ -97,7 +97,6 @@ void CFilePlaybackDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_TEST_ABOUT, m_aboutButton);
 	DDX_Control(pDX, IDC_FILE_CAPTURE, m_fileCapture);
 	DDX_Control(pDX, IDC_STOP_BUTTON, m_stopButton);
-	DDX_Control(pDX, IDC_PAUSE_BUTTON, m_pauseButton);
 	DDX_Control(pDX, IDC_VIDEO_RES_COMBO, m_videoresCombo);
 	DDX_Control(pDX, IDC_AUDIO_DEPTH_COMBO, m_audiodepthCombo);
 	DDX_Check(pDX, IDC_LOOP, m_loopCheck);
@@ -136,7 +135,6 @@ BEGIN_MESSAGE_MAP(CFilePlaybackDlg, CDialog)
 	ON_BN_CLICKED(IDC_PREV_BUTTON, &CFilePlaybackDlg::OnBnClickedPrevButton)
 	ON_EN_CHANGE(IDC_AUDIO_BD, &CFilePlaybackDlg::OnEnChangeAudioBd)
 	ON_BN_CLICKED(IDC_STOP_BUTTON, &CFilePlaybackDlg::OnBnClickedStopButton)
-	ON_BN_CLICKED(IDC_PAUSE_BUTTON, &CFilePlaybackDlg::OnBnClickedPauseButton)
 	ON_CBN_SELCHANGE(IDC_VIDEO_RES_COMBO, &CFilePlaybackDlg::OnCbnSelchangeVideoResCombo)
 	ON_CBN_SELCHANGE(IDC_AUDIO_DEPTH_COMBO, &CFilePlaybackDlg::OnCbnSelchangeAudioDepthCombo)
 END_MESSAGE_MAP()
@@ -233,7 +231,6 @@ void CFilePlaybackDlg::UpdateInterface()
 	m_openFileButton.EnableWindow(m_playbackState != PlaybackState::ScheduledPlayback);
 	m_playButton.EnableWindow(m_playbackState != PlaybackState::OutputDisabled);
 	m_stopButton.EnableWindow(m_playbackState != PlaybackState::OutputDisabled);
-	m_pauseButton.EnableWindow(m_playbackState != PlaybackState::OutputDisabled);
 	m_filePositionSlider.EnableWindow(m_playbackState == PlaybackState::OutputEnabled);
 }
 
@@ -302,12 +299,18 @@ void CFilePlaybackDlg::OnBnClickedStopButton()
 	// Check decklink status
 	if (m_selectedDevice != nullptr)
 	{
-		// Stop playback and uninitiliaze it
+		// We should uninitialize source reader and disable output
 		m_sourceReader->Uninitialize();
 		m_selectedDevice->DisableOutput();
+
+		// Detach scheduled playback and stop it
 		m_scheduledPlaybackThread.detach();
 		m_selectedDevice->StopScheduledPlayback();
+
+		// Tell playback state if already disable
 		m_playbackState = PlaybackState::OutputDisabled;
+		
+		// Set device to reset all playback condition
 		m_selectedDevice->OnUpdateStreamTime(nullptr);
 		m_selectedDevice->OnOutputStateChanged(nullptr);
 		m_selectedDevice->OnScheduledPlaybackStopped(nullptr);
@@ -339,21 +342,12 @@ void CFilePlaybackDlg::OnBnClickedStopButton()
 		m_filePositionSlider.SetRange(0, kFilePositionSliderRange);
 		m_filePositionEdit.SetWindowTextW(SecondsToHMS(0));
 		m_fileDurationEdit.SetWindowTextW(SecondsToHMS(0));
-		//m_fileNameEdit.SetWindowTextW(currentFilename);
 		m_openFileButton.EnableWindow(1);
 		//UpdateInterface();
 	}
 	else {
 		AfxMessageBox(_T("Not connected to decklink!"));
 	}
-}
-
-void CFilePlaybackDlg::OnBnClickedPauseButton()
-{
-	if (m_playbackState == PlaybackState::ScheduledPlayback)
-		StopScheduledPlayback();
-
-	UpdateInterface();
 }
 
 void CFilePlaybackDlg::OnBnClickedNextFile()

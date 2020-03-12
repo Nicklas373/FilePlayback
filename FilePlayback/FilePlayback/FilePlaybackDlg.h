@@ -113,7 +113,6 @@ private:
 	CButton						m_aboutButton;
 	CButton						m_fileCapture;
 	CButton						m_stopButton;
-	CButton						m_pauseButton;
 	CComboBox					m_deviceListCombo;
 	CComboBox					m_videoresCombo;
 	CComboBox					m_audiodepthCombo;
@@ -178,7 +177,6 @@ public:
 	afx_msg void OnBnClickedPrevButton();
 	afx_msg void OnEnChangeAudioBd();
 	afx_msg void OnBnClickedStopButton();
-	afx_msg void OnBnClickedPauseButton();
 	afx_msg void OnCbnSelchangeVideoResCombo();
 	afx_msg void OnCbnSelchangeAudioDepthCombo();
 };
