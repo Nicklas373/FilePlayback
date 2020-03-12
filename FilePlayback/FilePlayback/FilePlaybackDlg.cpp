@@ -34,7 +34,6 @@
 #include "SourceReader.h"
 #include "windows.h"
 #include "About.h"
-#include <atlcomcli.h>
 #include "FileCapture.h"
 #include "FileCaptureDlg.h"
 
@@ -250,6 +249,9 @@ void CFilePlaybackDlg::OnLbcRTclkPlay() {
 
 void CFilePlaybackDlg::OnBnClickedPlay()
 {
+	CString curname;
+	curname = currentFilename;
+
 	if (m_selectedDevice == nullptr)
 		return;
 
@@ -264,7 +266,8 @@ void CFilePlaybackDlg::OnBnClickedPlay()
 			SeekPosition();
 		}
 		StartScheduledPlayback();
-	} else if (m_playbackState == PlaybackState::ScheduledPlayback)
+	}
+	else if (m_playbackState == PlaybackState::ScheduledPlayback)
 		StopScheduledPlayback();
 }
 
