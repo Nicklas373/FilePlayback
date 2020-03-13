@@ -266,6 +266,9 @@ void CFilePlaybackDlg::OnBnClickedPlay()
 			if (hr != S_OK)
 				AfxMessageBox(_T("Failed to initiliaze file duration"));
 
+			// Re-setup slider duration for current file
+			m_filePositionSlider.SetPos(0);
+			m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
 			m_fileNameEdit.SetWindowTextW(getname);
 
 			EnableVideoOutput();
@@ -307,6 +310,9 @@ void CFilePlaybackDlg::OnBnClickedPlay()
 			if (hr != S_OK)
 				AfxMessageBox(_T("Failed to initiliaze file duration"));
 
+			// Re-setup slider duration for current file
+			m_filePositionSlider.SetPos(0);
+			m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
 			m_fileNameEdit.SetWindowTextW(getname);
 
 			StartScheduledPlayback();
@@ -474,6 +480,9 @@ void CFilePlaybackDlg::OnBnClickedNextFile()
 						if (hr != S_OK)
 							AfxMessageBox(_T("Failed to initiliaze file duration"));
 						
+						// Re-setup slider duration for current file
+						m_filePositionSlider.SetPos(0);
+						m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
 						m_fileNameEdit.SetWindowTextW(nextPath);
 
 						currentFilename = nextPath;
@@ -531,6 +540,10 @@ void CFilePlaybackDlg::OnBnClickedNextFile()
 						hr = m_sourceReader->GetFileDuration(&m_fileDuration);
 						if (hr != S_OK)
 							AfxMessageBox(_T("Failed to initiliaze file duration"));
+
+						// Re-setup slider duration for current file
+						m_filePositionSlider.SetPos(0);
+						m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
 						m_fileNameEdit.SetWindowTextW(nextPath);
 
 						currentFilename = nextPath;
@@ -552,6 +565,9 @@ void CFilePlaybackDlg::OnBnClickedNextFile()
 						if (hr != S_OK)
 							AfxMessageBox(_T("Failed to initiliaze file duration"));
 						
+						// Re-setup slider duration for current file
+						m_filePositionSlider.SetPos(0);
+						m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
 						m_fileNameEdit.SetWindowTextW(nextPath);
 
 						currentFilename = nextPath;
@@ -642,6 +658,9 @@ void CFilePlaybackDlg::OnBnClickedPrevButton()
 					if (hr != S_OK)
 						AfxMessageBox(_T("Failed to initiliaze file duration"));
 
+					// Re-setup slider duration for current file
+					m_filePositionSlider.SetPos(0);
+					m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
 					m_fileNameEdit.SetWindowTextW(prevPath);
 
 					currentFilename = prevPath;
@@ -700,6 +719,9 @@ void CFilePlaybackDlg::OnBnClickedPrevButton()
 					if (hr != S_OK)
 						AfxMessageBox(_T("Failed to initiliaze file duration"));
 
+					// Re-setup slider duration for current file
+					m_filePositionSlider.SetPos(0);
+					m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
 					m_fileNameEdit.SetWindowTextW(prevPath);
 
 					currentFilename = prevPath;
@@ -721,6 +743,9 @@ void CFilePlaybackDlg::OnBnClickedPrevButton()
 					if (hr != S_OK)
 						AfxMessageBox(_T("Failed to initiliaze file duration"));
 
+					// Re-setup slider duration for current file
+					m_filePositionSlider.SetPos(0);
+					m_fileDurationEdit.SetWindowTextW(SecondsToHMS(m_fileDuration / kMFTimescale));
 					m_fileNameEdit.SetWindowTextW(prevPath);
 
 					currentFilename = prevPath;
