@@ -433,11 +433,6 @@ void CFilePlaybackDlg::OnBnClickedNextFile()
 						UpdateInterface();
 
 					} else if (m_playbackState == PlaybackState::OutputEnabled) {
-						if (m_playbackState == PlaybackState::ScheduledPlayback)
-							// We should stop scheduled playback at first
-							m_scheduledPlaybackThread.detach();
-							m_selectedDevice->StopScheduledPlayback();
-
 						// Disable video output
 						m_selectedDevice->DisableOutput();
 						m_playbackState = PlaybackState::OutputDisabled;
@@ -494,6 +489,27 @@ void CFilePlaybackDlg::OnBnClickedNextFile()
 
 						UpdateInterface();
 					}
+					else if (m_playbackState == PlaybackState::ScheduledPlayback) {
+						// We should stop scheduled playback at first
+						StopPlayback();
+
+						// Re-initialize Next file
+						hr = m_sourceReader->Initialize(nextPath);
+						if (hr != S_OK)
+							AfxMessageBox(_T("Failed to initiliaze source reader"));
+
+						hr = m_sourceReader->GetFileDuration(&m_fileDuration);
+						if (hr != S_OK)
+							AfxMessageBox(_T("Failed to initiliaze file duration"));
+						
+						m_fileNameEdit.SetWindowTextW(nextPath);
+
+						currentFilename = nextPath;
+
+						EnableVideoOutput();
+
+						UpdateInterface();
+					}
 			}
 			else {
 				AfxMessageBox(_T("No Connected Decklink"));
@@ -531,121 +547,138 @@ void CFilePlaybackDlg::OnBnClickedPrevButton()
 			if (m_selectedDevice != nullptr)
 			{
 				if (m_playbackState == PlaybackState::OutputDisabled) {
-						// Unitialize source reader
-						m_sourceReader->Uninitialize();
+					// Unitialize source reader
+					m_sourceReader->Uninitialize();
 
-						// Set device to reset all playback condition
-						m_selectedDevice->OnUpdateStreamTime(nullptr);
-						m_selectedDevice->OnOutputStateChanged(nullptr);
-						m_selectedDevice->OnScheduledPlaybackStopped(nullptr);
-						m_selectedDevice->OnFrameDisplayedLate(nullptr);
+					// Set device to reset all playback condition
+					m_selectedDevice->OnUpdateStreamTime(nullptr);
+					m_selectedDevice->OnOutputStateChanged(nullptr);
+					m_selectedDevice->OnScheduledPlaybackStopped(nullptr);
+					m_selectedDevice->OnFrameDisplayedLate(nullptr);
 
-						m_selectedDevice->OnUpdateStreamTime([this]()
-							{
-								// Update UI with new profile
-								PostMessage(WM_UPDATE_STREAM_TIME_MESSAGE, 0, 0);
-							});
+					m_selectedDevice->OnUpdateStreamTime([this]()
+						{
+							// Update UI with new profile
+							PostMessage(WM_UPDATE_STREAM_TIME_MESSAGE, 0, 0);
+						});
 
-						m_selectedDevice->OnOutputStateChanged([this](bool enabled)
-							{
-								PostMessage(enabled ? WM_OUTPUT_ENABLED_MESSAGE : WM_OUTPUT_DISABLED_MESSAGE, 0, 0);
-							});
+					m_selectedDevice->OnOutputStateChanged([this](bool enabled)
+						{
+							PostMessage(enabled ? WM_OUTPUT_ENABLED_MESSAGE : WM_OUTPUT_DISABLED_MESSAGE, 0, 0);
+						});
 
-						m_selectedDevice->OnScheduledPlaybackStopped([this](bool endOfStream)
-							{
-								m_endOfStream = endOfStream;
-								PostMessage(WM_SCHEDULED_PLAYBACK_STOPPED_MESSAGE, 0, 0);
-							});
+					m_selectedDevice->OnScheduledPlaybackStopped([this](bool endOfStream)
+						{
+							m_endOfStream = endOfStream;
+							PostMessage(WM_SCHEDULED_PLAYBACK_STOPPED_MESSAGE, 0, 0);
+						});
 
-						m_selectedDevice->OnFrameDisplayedLate([this]()
-							{
-								PostMessage(WM_FRAME_DISPLAYED_LATE_MESSAGE, 0, 0);
-							});
+					m_selectedDevice->OnFrameDisplayedLate([this]()
+						{
+							PostMessage(WM_FRAME_DISPLAYED_LATE_MESSAGE, 0, 0);
+						});
 
-						// Reset playback duration
-						m_filePositionSlider.SetRange(0, kFilePositionSliderRange);
-						m_filePositionEdit.SetWindowTextW(SecondsToHMS(0));
-						m_openFileButton.EnableWindow(1);
+					// Reset playback duration
+					m_filePositionSlider.SetRange(0, kFilePositionSliderRange);
+					m_filePositionEdit.SetWindowTextW(SecondsToHMS(0));
+					m_openFileButton.EnableWindow(1);
 
-						// Re-initialize Next file
-						hr = m_sourceReader->Initialize(prevPath);
-						if (hr != S_OK)
-							AfxMessageBox(_T("Failed to initiliaze source reader"));
+					// Re-initialize Next file
+					hr = m_sourceReader->Initialize(prevPath);
+					if (hr != S_OK)
+						AfxMessageBox(_T("Failed to initiliaze source reader"));
 
-						hr = m_sourceReader->GetFileDuration(&m_fileDuration);
-						if (hr != S_OK)
-							AfxMessageBox(_T("Failed to initiliaze file duration"));
-						
-						m_fileNameEdit.SetWindowTextW(prevPath);
+					hr = m_sourceReader->GetFileDuration(&m_fileDuration);
+					if (hr != S_OK)
+						AfxMessageBox(_T("Failed to initiliaze file duration"));
 
-						currentFilename = prevPath;
+					m_fileNameEdit.SetWindowTextW(prevPath);
 
-						EnableVideoOutput();
+					currentFilename = prevPath;
 
-						UpdateInterface();
-					} else if (m_playbackState == PlaybackState::OutputEnabled) {
-							if (m_playbackState == PlaybackState::ScheduledPlayback)
-							// We should stop scheduled playback at first
-							m_scheduledPlaybackThread.detach();
-							m_selectedDevice->StopScheduledPlayback();
+					EnableVideoOutput();
 
-						// Disable video output
-						m_selectedDevice->DisableOutput();
-						m_playbackState = PlaybackState::OutputDisabled;
+					UpdateInterface();
+				}
+				else if (m_playbackState == PlaybackState::OutputEnabled) {
+					// Disable video output
+					m_selectedDevice->DisableOutput();
+					m_playbackState = PlaybackState::OutputDisabled;
 
-						// Unitialize source reader
-						m_sourceReader->Uninitialize();
+					// Unitialize source reader
+					m_sourceReader->Uninitialize();
 
-						// Set device to reset all playback condition
-						m_selectedDevice->OnUpdateStreamTime(nullptr);
-						m_selectedDevice->OnOutputStateChanged(nullptr);
-						m_selectedDevice->OnScheduledPlaybackStopped(nullptr);
-						m_selectedDevice->OnFrameDisplayedLate(nullptr);
+					// Set device to reset all playback condition
+					m_selectedDevice->OnUpdateStreamTime(nullptr);
+					m_selectedDevice->OnOutputStateChanged(nullptr);
+					m_selectedDevice->OnScheduledPlaybackStopped(nullptr);
+					m_selectedDevice->OnFrameDisplayedLate(nullptr);
 
-						m_selectedDevice->OnUpdateStreamTime([this]()
-							{
-								// Update UI with new profile
-								PostMessage(WM_UPDATE_STREAM_TIME_MESSAGE, 0, 0);
-							});
+					m_selectedDevice->OnUpdateStreamTime([this]()
+						{
+							// Update UI with new profile
+							PostMessage(WM_UPDATE_STREAM_TIME_MESSAGE, 0, 0);
+						});
 
-						m_selectedDevice->OnOutputStateChanged([this](bool enabled)
-							{
-								PostMessage(enabled ? WM_OUTPUT_ENABLED_MESSAGE : WM_OUTPUT_DISABLED_MESSAGE, 0, 0);
-							});
+					m_selectedDevice->OnOutputStateChanged([this](bool enabled)
+						{
+							PostMessage(enabled ? WM_OUTPUT_ENABLED_MESSAGE : WM_OUTPUT_DISABLED_MESSAGE, 0, 0);
+						});
 
-						m_selectedDevice->OnScheduledPlaybackStopped([this](bool endOfStream)
-							{
-								m_endOfStream = endOfStream;
-								PostMessage(WM_SCHEDULED_PLAYBACK_STOPPED_MESSAGE, 0, 0);
-							});
+					m_selectedDevice->OnScheduledPlaybackStopped([this](bool endOfStream)
+						{
+							m_endOfStream = endOfStream;
+							PostMessage(WM_SCHEDULED_PLAYBACK_STOPPED_MESSAGE, 0, 0);
+						});
 
-						m_selectedDevice->OnFrameDisplayedLate([this]()
-							{
-								PostMessage(WM_FRAME_DISPLAYED_LATE_MESSAGE, 0, 0);
-							});
+					m_selectedDevice->OnFrameDisplayedLate([this]()
+						{
+							PostMessage(WM_FRAME_DISPLAYED_LATE_MESSAGE, 0, 0);
+						});
 
-						// Reset playback duration
-						m_filePositionSlider.SetRange(0, kFilePositionSliderRange);
-						m_filePositionEdit.SetWindowTextW(SecondsToHMS(0));
-						m_openFileButton.EnableWindow(1);
+					// Reset playback duration
+					m_filePositionSlider.SetRange(0, kFilePositionSliderRange);
+					m_filePositionEdit.SetWindowTextW(SecondsToHMS(0));
+					m_openFileButton.EnableWindow(1);
 
-						// Re-initialize Next file
-						hr = m_sourceReader->Initialize(prevPath);
-						if (hr != S_OK)
-							AfxMessageBox(_T("Failed to initiliaze source reader"));
+					// Re-initialize Previous file
+					hr = m_sourceReader->Initialize(prevPath);
+					if (hr != S_OK)
+						AfxMessageBox(_T("Failed to initiliaze source reader"));
 
-						hr = m_sourceReader->GetFileDuration(&m_fileDuration);
-						if (hr != S_OK)
-							AfxMessageBox(_T("Failed to initiliaze file duration"));
-						
-						m_fileNameEdit.SetWindowTextW(prevPath);
+					hr = m_sourceReader->GetFileDuration(&m_fileDuration);
+					if (hr != S_OK)
+						AfxMessageBox(_T("Failed to initiliaze file duration"));
 
-						currentFilename = prevPath;
+					m_fileNameEdit.SetWindowTextW(prevPath);
 
-						EnableVideoOutput();
+					currentFilename = prevPath;
 
-						UpdateInterface();
-					}
+					EnableVideoOutput();
+
+					UpdateInterface();
+				}
+				else if (m_playbackState == PlaybackState::ScheduledPlayback) {
+					// We should stop scheduled playback at first
+					StopPlayback();
+
+					// Re-initialize Previous file
+					hr = m_sourceReader->Initialize(prevPath);
+					if (hr != S_OK)
+						AfxMessageBox(_T("Failed to initiliaze source reader"));
+
+					hr = m_sourceReader->GetFileDuration(&m_fileDuration);
+					if (hr != S_OK)
+						AfxMessageBox(_T("Failed to initiliaze file duration"));
+
+					m_fileNameEdit.SetWindowTextW(prevPath);
+
+					currentFilename = prevPath;
+
+					EnableVideoOutput();
+
+					UpdateInterface();
+				}
 			} else {
 				AfxMessageBox(_T("No Connected Decklink"));
 			}
