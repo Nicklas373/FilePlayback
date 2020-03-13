@@ -283,6 +283,18 @@ void CFilePlaybackDlg::OnBnClickedPlay()
 							LoopCheck();
 					});
 			}
+
+			// Check if autoplay checked or no
+			if (m_autoplayCheck) {
+				// Make sure if scheduled playback thread already stopped then we do
+				// looping
+				m_selectedDevice->OnScheduledPlaybackStopped([this](bool endOfStream)
+					{
+						m_endOfStream = endOfStream;
+						PostMessage(WM_SCHEDULED_PLAYBACK_STOPPED_MESSAGE, 0, 0);
+						AutoplayCheck();
+					});
+			}
 		}
 		else if (m_playbackState == PlaybackState::OutputEnabled) {
 			m_fileNameEdit.GetWindowTextW(getname);
@@ -308,6 +320,18 @@ void CFilePlaybackDlg::OnBnClickedPlay()
 						m_endOfStream = endOfStream;
 						PostMessage(WM_SCHEDULED_PLAYBACK_STOPPED_MESSAGE, 0, 0);
 						LoopCheck();
+					});
+			}
+
+			// Check if autoplay checked or no
+			if (m_autoplayCheck) {
+				// Make sure if scheduled playback thread already stopped then we do
+				// looping
+				m_selectedDevice->OnScheduledPlaybackStopped([this](bool endOfStream)
+					{
+						m_endOfStream = endOfStream;
+						PostMessage(WM_SCHEDULED_PLAYBACK_STOPPED_MESSAGE, 0, 0);
+						AutoplayCheck();
 					});
 			}
 		}
@@ -1447,8 +1471,10 @@ void CFilePlaybackDlg::LoopCheck()
 
 void CFilePlaybackDlg::AutoplayCheck()
 {
-	// TODO: Add your implementation code here.
+	// Do sleep 2 sec then stop and repeat
+	Sleep(2000);
 	OnBnClickedNextFile();
+	StartScheduledPlayback();
 }
 
 void CFilePlaybackDlg::OnBnClickedTestAbout()
