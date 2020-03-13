@@ -353,9 +353,6 @@ void CFilePlaybackDlg::StopPlayback() {
 			{
 				m_endOfStream = endOfStream;
 				PostMessage(WM_SCHEDULED_PLAYBACK_STOPPED_MESSAGE, 0, 0);
-				if (m_loopCheck) {
-					LoopCheck();
-				}
 			});
 
 		m_selectedDevice->OnFrameDisplayedLate([this]()
