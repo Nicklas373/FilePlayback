@@ -269,6 +269,18 @@ void CFilePlaybackDlg::OnBnClickedPlay()
 			EnableVideoOutput();
 
 			StartScheduledPlayback();
+
+			// Check if loop checked or no
+			if (m_loopCheck) {
+				// Make sure if scheduled playback thread already stopped then we do
+				// looping
+				m_selectedDevice->OnScheduledPlaybackStopped([this](bool endOfStream)
+					{
+						m_endOfStream = endOfStream;
+						PostMessage(WM_SCHEDULED_PLAYBACK_STOPPED_MESSAGE, 0, 0);
+							LoopCheck();
+					});
+			}
 		}
 		else if (m_playbackState == PlaybackState::OutputEnabled) {
 			m_fileNameEdit.GetWindowTextW(getname);
@@ -284,6 +296,18 @@ void CFilePlaybackDlg::OnBnClickedPlay()
 			m_fileNameEdit.SetWindowTextW(getname);
 
 			StartScheduledPlayback();
+
+			// Check if loop checked or no
+			if (m_loopCheck) {
+				// Make sure if scheduled playback thread already stopped then we do
+				// looping
+				m_selectedDevice->OnScheduledPlaybackStopped([this](bool endOfStream)
+					{
+						m_endOfStream = endOfStream;
+						PostMessage(WM_SCHEDULED_PLAYBACK_STOPPED_MESSAGE, 0, 0);
+						LoopCheck();
+					});
+			}
 		}
 	}
 }
@@ -329,6 +353,9 @@ void CFilePlaybackDlg::StopPlayback() {
 			{
 				m_endOfStream = endOfStream;
 				PostMessage(WM_SCHEDULED_PLAYBACK_STOPPED_MESSAGE, 0, 0);
+				if (m_loopCheck) {
+					LoopCheck();
+				}
 			});
 
 		m_selectedDevice->OnFrameDisplayedLate([this]()
@@ -1413,14 +1440,9 @@ BOOL CFilePlaybackDlg::PreTranslateMessage(MSG* pMsg)
 
 void CFilePlaybackDlg::LoopCheck()
 {
-	// TODO: Add your implementation code here.
-	//OnBnClickedPlay();
-	//m_endOfStream = false;
-	//AfxMessageBox(_T("Worked!"));
-	//m_filePosition = 0;
-	//m_filePositionEdit.SetWindowText(SecondsToHMS(m_filePosition / kMFTimescale));
-	//SeekPosition();
+	// Do sleep 2 sec then stop and repeat
 	Sleep(2000);
+	StopPlayback();
 	OnBnClickedPlay();
 }
 

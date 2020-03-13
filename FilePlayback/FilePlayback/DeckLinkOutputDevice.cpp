@@ -93,7 +93,7 @@ bool DeckLinkOutputDevice::Uninitialize()
 	return true;
 }
 
-HRESULT	DeckLinkOutputDevice::QueryInterface(REFIID iid, LPVOID *ppv)
+HRESULT	DeckLinkOutputDevice::QueryInterface(REFIID iid, LPVOID* ppv)
 {
 	HRESULT			result = E_NOINTERFACE;
 
@@ -162,7 +162,7 @@ HRESULT	DeckLinkOutputDevice::ScheduledFrameCompleted(IDeckLinkVideoFrame* compl
 		std::lock_guard<std::mutex> lock(m_playbackMutex);
 		hr = m_deckLinkOutput->GetBufferedVideoFrameCount(&m_bufferedVideoFrameCount);
 	}
-			
+
 	if (hr == S_OK)
 		m_scheduleVideoFrameCondition.notify_one();
 
@@ -221,8 +221,8 @@ HRESULT DeckLinkOutputDevice::Notify(BMDNotifications topic, ULONGLONG param1, U
 }
 
 
-HRESULT DeckLinkOutputDevice::GetDeviceName(CString& deviceName) 
-{ 
+HRESULT DeckLinkOutputDevice::GetDeviceName(CString& deviceName)
+{
 	CComBSTR	deviceNameBSTR = nullptr;
 	HRESULT		hr;
 
@@ -232,7 +232,7 @@ HRESULT DeckLinkOutputDevice::GetDeviceName(CString& deviceName)
 	else
 		deviceName = _T("DeckLink");
 
-	return hr; 
+	return hr;
 };
 
 HRESULT DeckLinkOutputDevice::GetDisplayModeName(CString& displayModeName)
@@ -502,7 +502,7 @@ void DeckLinkOutputDevice::ScheduleAudioSamplesThread(CComPtr<SourceReader>& sou
 		bool readAudioPacket = false;
 		{
 			std::unique_lock<std::mutex> lock(m_playbackMutex);
-			m_scheduleAudioPacketCondition.wait(lock, [&]{ return (m_bufferedAudioSampleCount < m_bufferedAudioWaterLevel) || m_stopPlayback; });
+			m_scheduleAudioPacketCondition.wait(lock, [&] { return (m_bufferedAudioSampleCount < m_bufferedAudioWaterLevel) || m_stopPlayback; });
 
 			if (m_stopPlayback)
 				scheduledPlaybackRunning = false;
@@ -532,7 +532,7 @@ bool DeckLinkOutputDevice::GetOutputVideoFrame(CComPtr<PlaybackVideoFrame>& vide
 		// Refer to DeckLink SDK Manual - 2.7.4 Pixel Formats
 		int outputBytesPerRow = ((videoFrame->GetWidth() + 47) / 48) * 128;;
 
-		if (m_deckLinkOutput->CreateVideoFrame(videoFrame->GetWidth(), videoFrame->GetHeight(), outputBytesPerRow, 
+		if (m_deckLinkOutput->CreateVideoFrame(videoFrame->GetWidth(), videoFrame->GetHeight(), outputBytesPerRow,
 			kConvertedPixelFormat, videoFrame->GetFlags(), &newVideoFrame) != S_OK)
 			return false;
 
