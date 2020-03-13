@@ -231,6 +231,8 @@ void CFilePlaybackDlg::UpdateInterface()
 	m_openFileButton.EnableWindow(m_playbackState != PlaybackState::ScheduledPlayback);
 	m_playButton.EnableWindow(m_playbackState != PlaybackState::OutputDisabled);
 	m_stopButton.EnableWindow(m_playbackState != PlaybackState::OutputDisabled);
+	m_nextButton.EnableWindow(m_playbackState != PlaybackState::OutputDisabled);
+	m_prevButton.EnableWindow(m_playbackState != PlaybackState::OutputDisabled);
 	m_filePositionSlider.EnableWindow(m_playbackState == PlaybackState::OutputEnabled);
 }
 
