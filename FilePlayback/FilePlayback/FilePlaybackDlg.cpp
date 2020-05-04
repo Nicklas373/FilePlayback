@@ -214,6 +214,7 @@ void CFilePlaybackDlg::videoresCombo() {
 	m_videoresCombo.AddString(_T("1080p 60fps"));
 	m_videoresCombo.AddString(_T("1080p 30fps"));
 	m_videoresCombo.AddString(_T("720p 60fps"));
+	m_videoresCombo.AddString(_T("480p 60fps"));
 	m_videoresCombo.AddString(_T("Same as source"));
 }
 
@@ -1203,6 +1204,9 @@ BMDDisplayMode CFilePlaybackDlg::LookupDisplayMode(void)
 				else if (videores == _T("720p 60fps")) {
 					bmdDisplayMode = bmdModeHD720p60;
 				}
+				else if (videores == _T("480p 60fps")) {
+					bmdDisplayMode = bmdMode640x480p60;
+				}
 				else if (videores == _T("Same as source")) {
 					bmdDisplayMode = candidateMode->GetDisplayMode();
 					break;
@@ -1535,6 +1539,9 @@ void CFilePlaybackDlg::OnCbnSelchangeVideoResCombo()
 					}
 					else if (videores == _T("720p 60fps")) {
 						bmdDisplayMode = bmdModeHD720p60;
+					}
+					else if (videores == _T("480p 60fps")) {
+						bmdDisplayMode = bmdMode640x480p60;
 					}
 					else if (videores == _T("Same as source")) {
 						DisableVideoOutput();
